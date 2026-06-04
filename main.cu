@@ -109,23 +109,23 @@
 //     // ====================================================================
 //     // BƯỚC CUỐI: LƯU ẢNH KẾT QUẢ ĐỂ KIỂM CHỨNG BẰNG IMAGEJ
 //     // ====================================================================
-//     printf("\nDang xuat anh ket qua ra file RAW...\n");
+//     // printf("\nDang xuat anh ket qua ra file RAW...\n");
     
 //     // 1. Cấp phát mảng tạm trên RAM (CPU) để hứng dữ liệu từ GPU về
-//     unsigned char* h_mip = new unsigned char[frame_pixels];
+//     // unsigned char* h_mip = new unsigned char[frame_pixels];
     
 //     // 2. Copy dữ liệu từ Device (GPU) về lại Host (CPU)
-//     cudaMemcpy(h_mip, d_mip, frame_pixels * sizeof(unsigned char), cudaMemcpyDeviceToHost);
+//     // cudaMemcpy(h_mip, d_mip, frame_pixels * sizeof(unsigned char), cudaMemcpyDeviceToHost);
     
 //     // 3. Ghi dữ liệu ra các file nhị phân (RAW)
-//     FILE* f_mip = fopen("ketqua_MIP.raw", "wb");
-//     if(f_mip) { fwrite(h_mip, sizeof(unsigned char), frame_pixels, f_mip); fclose(f_mip); }
+//     // FILE* f_mip = fopen("ketqua_MIP.raw", "wb");
+//     // if(f_mip) { fwrite(h_mip, sizeof(unsigned char), frame_pixels, f_mip); fclose(f_mip); }
     
 //     // 4. Dọn dẹp RAM máy tính
-//     delete[] h_mip;
+//     // delete[] h_mip;
 
-//     printf("Da luu thanh cong file: ketqua_MIP.raw\n");
-//     printf("=> Hay mo file nay bang ImageJ (Size: 1000x2048, 8-bit) de xem ket qua!\n");
+//     // printf("Da luu thanh cong file: ketqua_MIP.raw\n");
+//     // printf("=> Hay mo file nay bang ImageJ (Size: 1000x2048, 8-bit) de xem ket qua!\n");
 
 //     // 4. DỌN DẸP BỘ NHỚ (Đừng quên giải phóng nhé)
 //     cudaFree(d_volume); cudaFree(d_mip); cudaFree(d_glcm);
