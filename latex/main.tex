@@ -1,0 +1,294 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Khóa luận tốt nghiệp/Tiểu luận 
+% LaTeX Template
+% Phiên bản 1.0 (tạo ra ngày 05/10/2022)
+%
+% Template này có thể được download tại:
+% https://github.com/cpc1996/HUS-Dissertation-Template
+%
+% Phiên bản 1.0 được chỉnh sửa bởi:
+% Công Phương Cao (congphuongcao@gmail.com)
+% Nguyễn Cảnh Việt (vietncp@gmail.com)
+%
+% Template được tham khảo từ một phiên bản template của:
+% Steve Gunn (http://users.ecs.soton.ac.uk/srg/softwaretools/document/templates/)
+% Sunil Patel (http://www.sunilpatel.co.uk/thesis-template/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%----------------------------------------------------------------------------------------
+%	(KHÔNG CHỈNH SỬA PHẦN NÀY)
+%
+%	PHẦN 1: CÁC PACKAGE CƠ BẢN VÀ CÁC TÙY CHỈNH VĂN BẢN
+%----------------------------------------------------------------------------------------
+
+\documentclass[
+12pt,
+oneside,
+english,
+doublespacing,
+nolistspacing,
+liststotoc,
+parskip,
+headsepline,
+chapterinoneline,
+]{HUSdissertation}
+
+% \usepackage[utf8]{inputenc} 
+\usepackage[utf8]{vietnam} 
+%\usepackage[T1]{fontenc}
+
+\usepackage{mathptmx}
+\usepackage{amsmath}
+\allowdisplaybreaks
+
+%https://www.overleaf.com/learn/latex/Biblatex_citation_styles
+%\usepackage[backend=bibtex,style=authoryear,natbib=true]{biblatex}
+\usepackage[backend=bibtex,style=numeric,citestyle=ieee,natbib=true]{biblatex}
+
+\addbibresource{main.bib}
+
+\usepackage[autostyle=true]{csquotes}
+
+
+%----------------------------------------------------------------------------------------
+%	PHẦN 2: CÁC PACKAGE BỔ TRỢ THÊM VÀO TRONG QUÁ TRÌNH BIÊN SOẠN
+%----------------------------------------------------------------------------------------
+
+\RequirePackage{setlst}		% Liệt kê/trích dẫn code
+
+\usepackage{multirow}
+\usepackage{subfigure}
+\usepackage[fontsize=13pt]{scrextend}
+
+%https://www.sascha-frank.com/latex-font-size.html
+%https://tex.stackexchange.com/questions/103286/how-to-change-section-subsection-font-size
+\usepackage{titlesec}
+
+\titleformat{\section}
+{\normalfont\fontsize{13}{13}\bfseries}{\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\normalfont\fontsize{13}{13}\bfseries\itshape}{\thesubsection}{1em}{}
+
+%https://tex.stackexchange.com/questions/351961/how-to-indent-code-in-beginverbatim
+\usepackage{fancyvrb} 		% Fancy Verbatim
+\fvset{tabsize=4,vspace=0pt,fontsize=\footnotesize}
+
+\usepackage{longtable} 		% Bảng dài - Long table
+
+\usepackage[figuresright]{rotating} % Bảng ngang - Sideways table
+\usepackage{tabularx}
+
+\usepackage{fontawesome5} 	% Các biểu tượng, ký hiệu đặc biệt
+
+\usepackage{tikz} 			% Vẽ hình
+\usetikzlibrary{calc}
+
+\usepackage{indentfirst}	% Lùi đầu dòng ở đầu đoạn văn
+\setlength{\parindent}{0.5cm}
+
+%----------------------------------------------------------------------------------------
+%	PHẦN 3: THÔNG TIN VỀ Khóa luận tốt nghiệp/Tiểu luận (THESIS INFORMATION)
+%----------------------------------------------------------------------------------------
+
+\author{Nhóm 4} 			% Ví dụ: "Nguyễn Thị Thu Thảo"
+\thesistitle{\normalsize{Ứng dụng lập trình song song CUDA C++ trong xử lý và phân tích khối dữ liệu ảnh y khoa 3D}} % Tên đồ án
+
+\supervisor {TS. Nguyễn Hoàng Trung} 	% Ví dụ: "PGS. TS. Nguyễn Ngọc Long"
+\supervisorr{} 	% Tên này nếu không có thì để trống!
+
+\field{Kỹ thuật điện tử và tin học} 					% Ví dụ: "Ngành Vật lý", "Ngành Hóa học", v.v.
+\program{Chương trình đào tạo chuẩn} 			% Ví dụ: "Chương trình đào tạo chuẩn", "Chương trình đào tạo cử nhân tài năng", v.v.
+\doctype{Đồ án kỹ thuật điện tử và tin học} % Điền vào đây: "Khóa luận tốt nghiệp đại học hệ chính quy" hoặc "Tiểu luận"
+
+\university{\href{http://hus.vnu.edu.vn}{Trường Đại học Khoa học Tự nhiên}}
+\department{\href{http://hus.vnu.edu.vn/gioi-thieu/co-cau-to-chuc/khoa-truc-thuoc/khoa-vat-ly.html}{Khoa Vật lý}}
+
+\AtBeginDocument{
+	\hypersetup{pdftitle=\ttitle}
+	\hypersetup{pdfauthor=\authorname}
+}
+\begin{document}
+
+\lstset{style=codeC}	% Thiết lập ngôn ngữ C++ là ngôn ngữ mặc định cho phần liệt kê source code của cả bài
+
+\frontmatter 			% Sử dụng hệ thống đánh số La Mã (i, ii, iii, iv...) cho những trang trước phần mục lục
+
+\pagestyle{plain} 
+
+
+%----------------------------------------------------------------------------------------
+%	(KHÔNG CHỈNH SỬA PHẦN NÀY)
+%
+%	PHẦN 4: TRANG TIÊU ĐỀ/TRANG BÌA (TITLE PAGE)
+%----------------------------------------------------------------------------------------
+
+% TRANG BÌA CHÍNH:
+\include{main-cover}
+
+% TRANG BÌA PHỤ:
+\include{sub-cover}
+
+
+%----------------------------------------------------------------------------------------
+%	PHẦN 5: DANH NGÔN (QUOTES)
+%----------------------------------------------------------------------------------------
+
+% \vspace*{0.2\textheight}
+
+% \noindent\enquote{\itshape 
+% 	Cái tôi và sự hiểu biết tỷ lệ nghịch với nhau. Hiểu biết càng nhiều cái tôi càng bé. Hiểu biết càng ít, cái tôi càng to.
+% }\bigbreak
+
+% \hfill Albert Einstein
+
+
+%----------------------------------------------------------------------------------------
+%	PHẦN 6: LỜI CẢM ƠN (ACKNOWLEDGEMENTS)
+%----------------------------------------------------------------------------------------
+
+\begin{acknowledgements}
+	\addchaptertocentry{\acknowledgementname}
+	\thispagestyle{empty}
+	
+	Trước hết, chúng em xin bày tỏ lòng biết ơn chân thành và sâu sắc đến TS. Nguyễn Hoàng Trung người đã tận tình hướng dẫn, hỗ trợ và đồng hành cùng chúng em trong suốt quá trình học tập cũng như thực hiện đồ án môn Lập trình song song và phân tán.
+
+	Đề tài ``Ứng dụng lập trình song song CUDA C++ trong xử lý và phân tích khối dữ liệu ảnh y khoa 3D'' là cơ hội quý báu để chúng em có thể vận dụng những kiến thức đã học vào thực tế, đồng thời tiếp cận sâu hơn với lĩnh vực tính toán song song và xử lý ảnh y tế. Trong suốt quá trình thực hiện đề tài, chúng em đã nhận được rất nhiều sự chỉ bảo tận tình, những góp ý chuyên môn quý báu và sự động viên từ thầy. Đây không chỉ là nguồn hỗ trợ quan trọng giúp chúng em hoàn thành đề tài mà còn là nền tảng giúp chúng em nâng cao tư duy nghiên cứu và kỹ năng làm việc thực tế.
+
+	Thông qua báo cáo này, chúng em cũng nhận thức rõ rằng kiến thức và kinh nghiệm của bản thân vẫn còn nhiều hạn chế, vì vậy bài làm khó tránh khỏi những thiếu sót. Chúng em rất mong nhận được những ý kiến đóng góp và nhận xét từ thầy để có thể tiếp tục hoàn thiện bản thân cũng như nâng cao chất lượng nghiên cứu trong tương lai.
+
+	Cuối cùng, chúng em xin kính chúc thầy luôn mạnh khỏe, hạnh phúc và gặt hái nhiều thành công trong công tác giảng dạy cũng như nghiên cứu khoa học.
+
+\end{acknowledgements}
+
+
+%----------------------------------------------------------------------------------------
+%	(KHÔNG CHỈNH SỬA PHẦN NÀY)
+%
+%	PHẦN 7: MỤC LỤC (LIST OF CONTENTS/FIGURES/TABLES PAGES)
+%----------------------------------------------------------------------------------------
+
+\begin{spacing}{1.15}
+	\tableofcontents 	% In ra mục lục chính
+\end{spacing}
+
+\begin{spacing}{1.15}
+	\listoffigures 		% In ra danh sách hình vẽ
+\end{spacing}
+
+\begin{spacing}{1.15}
+	\listoftables		% In ra danh sách bảng
+\end{spacing}
+
+
+%----------------------------------------------------------------------------------------
+%	PHẦN 8: DANH SÁCH TÊN VIẾT TẮT (ABBREVIATIONS)
+%----------------------------------------------------------------------------------------
+
+\begin{abbreviations}{ll} % Thêm danh sách tên viết tắt (dưới dạng một bảng có 2 cột)
+\textbf{CUDA} & \textbf{C}ompute \textbf{U}nified \textbf{D}evice \textbf{A}rchitecture \\
+\textbf{GPU} & \textbf{G}raphics \textbf{P}rocessing \textbf{U}nit \\
+\textbf{CPU} & \textbf{C}entral \textbf{P}rocessing \textbf{U}nit \\
+\textbf{VRAM} & \textbf{V}ideo \textbf{R}andom \textbf{A}ccess \textbf{M}emory \\
+\textbf{RAM} & \textbf{R}andom \textbf{A}ccess \textbf{M}emory \\
+\textbf{MIP} & \textbf{M}aximum \textbf{I}ntensity \textbf{P}rojection \\
+\textbf{GLCM} & \textbf{G}ray-\textbf{L}evel \textbf{C}o-occurrence \textbf{M}atrix \\
+\textbf{OCT} & \textbf{O}ptical \textbf{C}oherence \textbf{T}omography \\
+\textbf{OCTA} & \textbf{O}ptical \textbf{C}oherence \textbf{T}omography \textbf{A}ngiography \\
+\textbf{CT} & \textbf{C}omputed \textbf{T}omography \\
+\textbf{MRI} & \textbf{M}agnetic \textbf{R}esonance \textbf{I}maging \\
+\textbf{PET} & \textbf{P}ositron \textbf{E}mission \textbf{T}omography \\
+\textbf{CAD} & \textbf{C}omputer-\textbf{A}ided \textbf{D}iagnosis \\
+\textbf{3D} & \textbf{3}-\textbf{D}imensional \\
+\textbf{2D} & \textbf{2}-\textbf{D}imensional \\
+\textbf{I/O} & \textbf{I}nput/\textbf{O}utput \\
+\end{abbreviations}
+
+
+%----------------------------------------------------------------------------------------
+%	PHẦN 9: CÁC HẰNG SỐ VẬT LÝ/THÔNG SỐ KĨ THUẬT (PHYSICAL CONSTANTS/OTHER DEFINITIONS)
+%----------------------------------------------------------------------------------------
+
+% \begin{constants}{lr@{${}={}$}l} % Thêm danh sách các hằng số (dưới dạng một bảng có 3 cột)
+
+% %	Lệnh \SI{}{} được cung cấp bởi gói siunitx, hãy đọc tài liệu hướng dẫn để biết cách sử dụng nó
+
+% %	Tên hằng số 	 & $Biểu tượng$	& $Hằng số$ cùng với đơn vị\\
+% 	Vận tốc ánh sáng & $c_{0}$		& \SI{2.99792458e8}{\meter\per\second} (chính xác)\\
+
+% \end{constants}
+
+
+%----------------------------------------------------------------------------------------
+%	PHẦN 10: DANH SÁCH KÝ HIỆU (SYMBOLS)
+%----------------------------------------------------------------------------------------
+
+% \begin{symbols}{lll} % Thêm danh sách các ký hiệu (dưới dạng một bảng có 3 cột)
+
+% %   Ký hiệu	& Ý nghĩa		& Đơn vị \\
+% 	$a$		& khoảng cách	& \si{\meter} \\
+% 	$P$		& công suất		& \si{\watt} (\si{\joule\per\second}) \\
+
+% 	\addlinespace % Khoảng cách để phân biệt giữa ký hiệu Latin với ký hiệu La Mã
+
+% 	$\omega$ & tần số góc	& \si{\radian} \\
+
+% \end{symbols}
+
+
+%----------------------------------------------------------------------------------------
+%	(KHÔNG CHỈNH SỬA PHẦN NÀY)
+%
+%	PHẦN 11: LỜI ĐỀ TẶNG (DEDICATION)
+%----------------------------------------------------------------------------------------
+
+%\dedicatory{Dành tặng/Dành cho/Gửi tới\ldots} 
+
+
+%----------------------------------------------------------------------------------------
+%	PHẦN 12: NỘI DUNG/CÁC CHƯƠNG Khóa luận tốt nghiệp/Tiểu luận (THESIS CONTENT - CHAPTERS)
+%----------------------------------------------------------------------------------------
+
+\mainmatter % Bắt đầu đánh số trang (1,2,3...)
+
+\pagestyle{plain}
+
+% Hãy thêm những chương (chapter) của khóa luận/tiểu luận vào thư mục Chapters
+% Hãy bỏ chú thích những dòng nếu bạn đã bổ sung những chương vào
+
+\include{Chapters/Chapter0}
+\include{Chapters/Chapter1}
+\include{Chapters/Chapter2} 
+\include{Chapters/Chapter3}
+\include{Chapters/Chapter4} 
+
+
+%----------------------------------------------------------------------------------------
+%	(KHÔNG CHỈNH SỬA PHẦN NÀY)
+%
+%	PHẦN 13: TÀI LIỆU THAM KHẢO
+%----------------------------------------------------------------------------------------
+
+\begin{spacing}{1.15}
+	\printbibliography[heading=bibintoc, title=Tài liệu tham khảo] % In ra tài liệu tham khảo
+\end{spacing}
+
+
+%----------------------------------------------------------------------------------------
+%	PHẦN 14: PHỤ LỤC (THESIS CONTENT - APPENDICES)
+%----------------------------------------------------------------------------------------
+
+\appendix % Nói với LaTeX rằng những chương về sau được tính là phụ lục
+
+% Hãy thêm những phụ lục (appendix) của khóa luận/tiểu luận vào thư mục Appendices
+% Hãy bỏ chú thích những dòng nếu bạn đã bổ sung những phụ lục vào
+
+\include{Appendices/AppendixA}
+%\include{Appendices/AppendixB}
+%\include{Appendices/AppendixC}
+
+%----------------------------------------------------------------------------------------
+
+\end{document}  

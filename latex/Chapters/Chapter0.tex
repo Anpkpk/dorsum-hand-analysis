@@ -1,0 +1,21 @@
+% MỞ ĐẦU (LỜI MỞ ĐẦU - Chương 0)
+
+\chapter*{MỞ ĐẦU} % Tên của chương
+\addcontentsline{toc}{chapter}{MỞ ĐẦU} % Thêm tên chương vào mục lục
+\label{Chapter0} % Để trích dẫn chương này ở chỗ nào đó trong bài, hãy sử dụng lệnh \ref{Chapter0} 
+%----------------------------------------------------------------------------------------
+
+Y học hiện đại ngày càng phát triển, trong đó chẩn đoán hình ảnh đóng vai trò quan trọng trong việc phát hiện, theo dõi và điều trị bệnh. Sự tiến bộ vượt bậc của các công nghệ chẩn đoán hình ảnh như Chụp cắt lớp vi tính (CT), Cộng hưởng từ (MRI), Chụp cắt lớp phát xạ (PET), và đặc biệt là công nghệ Chụp cắt lớp quang học / mạch máu quang học (OCT / OCTA) đã cung cấp cho y học những hình ảnh vô cùng chi tiết, cho phép bác sĩ quan sát rõ nét cấu trúc vi mạch, mô tế bào và các khối bất thường dưới dạng không gian ba chiều (3D), từ đó tăng tính chính xác và kịp thời trong chẩn đoán.
+
+Tuy nhiên, chất lượng hình ảnh cao đi kèm với sự gia tăng rất lớn về khối lượng dữ liệu. Một khối dữ liệu thô (volume 3D) có thể chứa từ hàng trăm triệu đến hàng tỷ điểm ảnh. Việc trích xuất đặc trưng, lọc nhiễu và phân tích khối dữ liệu khổng lồ này bằng các hệ thống vi xử lý trung tâm (CPU) truyền thống với kiến trúc tính toán tuần tự khiến thời gian phân tích một khối ảnh kéo dài, không đáp ứng được yêu cầu chẩn đoán nhanh chóng trong các tình huống y tế khẩn cấp, đồng thời gây lãng phí tài nguyên hệ thống.
+
+Để giải quyết triệt để bài toán này, việc ứng dụng kiến trúc tính toán song song thông qua công nghệ CUDA trên các bộ xử lý đồ họa (GPU) là một hướng đi cấp thiết và mang tính đột phá. Với khả năng thực thi đồng thời hàng chục ngàn luồng (threads), GPU mở ra tiềm năng to lớn trong việc tăng tốc độ xử lý dữ liệu lớn, tạo ra một luồng dữ liệu hoàn chỉnh, liền mạch cho các hệ thống y tế hiện đại.
+
+Xuất phát từ những thực tiễn và yêu cầu trên, đề tài ``Ứng dụng lập trình song song CUDA C++ trong xử lý và phân tích khối dữ liệu ảnh y khoa 3D'' được thực hiện. Đề tài tập trung vào mục tiêu cốt lõi là xây dựng một hệ thống xử lý tốc độ cao nhằm phân tích khối dữ liệu ảnh y khoa 3D bằng kỹ thuật lập trình song song CUDA C++. Hệ thống sử dụng khối ảnh mô phỏng từ bộ dữ liệu Dorsum Hand OCT/OCTA để tự động hóa các bước xử lý quan trọng, bao gồm:
+
+\begin{itemize}
+    \item Ép khối dữ liệu ảnh 3D thành bản đồ bề mặt 2D để quan sát tổng quan.
+    \item Áp dụng các bộ lọc không gian để khử nhiễu và phân ngưỡng hình ảnh.
+    \item Phân tích định lượng hình thái và mật độ mạng lưới mạch máu.
+    \item Trích xuất và đánh giá các đặc trưng kết cấu mô sinh học.
+\end{itemize}

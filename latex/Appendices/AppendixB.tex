@@ -1,0 +1,22 @@
+% Phụ lục B
+
+\chapter{Source code} % Tên của phụ lục
+
+\label{AppendixB} % Để trích dẫn chương này ở chỗ nào đó trong bài, hãy sử dụng lệnh \ref{AppendixB} 
+
+%----------------------------------------------------------------------------------------
+Do giới hạn về độ dài của phụ lục, phần còn lại của source code được lưu trữ trên GitHub tại địa chỉ \url{https://github.com/Anpkpk/project_spekel_denoise}
+
+\section{Mô hình U-Net}
+Kiến trúc U-Net cho bài toán khử nhiễu Speckle ảnh OCT, bao gồm khối DoubleConv với InstanceNorm2d, Encoder với MaxPool, Decoder với Bilinear Upsampling, và Residual Learning ở đầu ra.
+
+File \file{unet.py}:
+\lstinputlisting[style=codePython]{Code/unet.py}
+%----------------------------------------------------------------------------------------
+
+\newpage
+
+\section{Hàm mất mát và Huấn luyện}
+Triển khai Hybrid L1-SSIM Loss, TVLoss, và vòng lặp huấn luyện với AMP, Gradient Clipping.
+File \file{trainer.py}:
+\lstinputlisting[style=codePython]{Code/trainer.py}

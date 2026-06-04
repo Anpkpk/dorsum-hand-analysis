@@ -1,0 +1,182 @@
+\usepackage{listings}
+\usepackage[dvipsnames]{xcolor}
+
+%----------------------------------------------------------------------------------------
+%https://tex.stackexchange.com/questions/33039/using-ttfamily-with-bfseries-or-how-to-enable-bold-in-fixed-width-font
+\renewcommand{\ttdefault}{pcr}
+\newenvironment{pcr}{\fontfamily{pcr}\selectfont}
+
+\definecolor{backcolor}{HTML}{f5fffc}
+\definecolor{darkpink}{rgb}{0.75,0.25,0.5}
+\definecolor{cadetblue}{rgb}{.6,.8,.8}
+
+%----------------------------------------------------------------------------------------
+
+\lstset{
+	tabsize			= 4,
+	breaklines		= true,
+	basicstyle		= \ttfamily\color{black}\bfseries\scriptsize,
+	identifierstyle	= \ttfamily\color{black},
+	keywordstyle	= \ttfamily\color{blue}\bfseries,  
+	stringstyle		= \ttfamily\color{Red},
+	commentstyle	= \itshape\color{cyan},
+	%===================================================================================
+	frame			= l,
+	numbers			= left,
+	stepnumber		= 1, 
+	upquote			= true,
+	numberstyle		= \tiny\color{Gray},
+	backgroundcolor	= \color{backcolor},
+	rulecolor		= \color{lightgray},
+	rulesepcolor	= \color{lightgray},
+	showstringspaces=false
+	keepspaces		= true, 
+	belowcaptionskip= 1\baselineskip,
+	xleftmargin		= \parindent,
+	%	escapeinside	= {@}{@},
+	numbersep		= 7pt
+}
+
+%----------------------------------------------------------------------------------------
+
+\lstdefinestyle{codeC} {
+	%https://www.pvv.ntnu.no/~berland/latex/docs/listings.pdf
+	%https://www.overleaf.com/learn/latex/Using_colours_in_LaTeX
+	language		= [ISO]C++, 
+	basicstyle		= \linespread{1.0}\ttfamily\color{black}\bfseries\scriptsize,
+	identifierstyle	= \ttfamily\color{black},
+	keywordstyle	= \ttfamily\color{blue}\bfseries,  
+	stringstyle		= \ttfamily\color{Red},
+	commentstyle	= \itshape\color{cyan}, 
+	morekeywords	= {FILE},
+	%	emphstyle		= \ttfamily\color{red}\bfseries,
+	%	emph			= { auto,break,case,char,const,continue,default,do,double,else,enum,extern,float,for,goto,if,int,long,register,return,short,signed,sizeof,static,struct,switch,typedef,union,unsigned,void,volatile,while,FILE},
+	%https://tex.stackexchange.com/questions/283170/using-different-colors-for-different-keywords-in-lstlisting
+	classoffset		= 1, % starting new class
+	otherkeywords	= {\#include},
+	morekeywords	= {\#include},
+	keywordstyle	= \ttfamily\color{Green}\bfseries,
+	morecomment		= [s][\bfseries\color{Orange}]{<a}{>},% a b d e f i l m n q r s t u v
+	morecomment		= [s][\bfseries\color{Orange}]{<b}{>},
+	morecomment		= [s][\bfseries\color{Orange}]{<d}{>},
+	morecomment		= [s][\bfseries\color{Orange}]{<e}{>},
+	morecomment		= [s][\bfseries\color{Orange}]{<f}{>},
+	morecomment		= [s][\bfseries\color{Orange}]{<i}{>},
+	morecomment		= [s][\bfseries\color{Orange}]{<l}{>},
+	morecomment		= [s][\bfseries\color{Orange}]{<m}{>},
+	morecomment		= [s][\bfseries\color{Orange}]{<n}{>},
+	morecomment		= [s][\bfseries\color{Orange}]{<q}{>},
+	morecomment		= [s][\bfseries\color{Orange}]{<r}{>},
+	morecomment		= [s][\bfseries\color{Orange}]{<s}{>},
+	morecomment		= [s][\bfseries\color{Orange}]{<t}{>},
+	morecomment		= [s][\bfseries\color{Orange}]{<u}{>},
+	morecomment		= [s][\bfseries\color{Orange}]{<v}{>},
+	morecomment		= [l][\bfseries\color{Green}]{\#define},
+	classoffset		= 0,
+}
+
+%----------------------------------------------------------------------------------------
+
+\lstdefinestyle{plaintext} {
+	%https://www.pvv.ntnu.no/~berland/latex/docs/listings.pdf
+	%https://www.overleaf.com/learn/latex/Using_colours_in_LaTeX
+	language		= bash, 
+	basicstyle		= \linespread{1.0}\ttfamily\color{black}\bfseries\scriptsize,
+	identifierstyle	= \ttfamily\color{black},
+	keywordstyle	= \ttfamily\color{black}\bfseries,  
+	stringstyle		= \ttfamily\color{black},
+	commentstyle	= \itshape\color{gray}, 
+	%	showspaces		= true,
+	%	showstringspaces= true,
+	showtabs		= true,
+	tab				= \textcolor{lightgray}{$\to$},
+	%	literate=*
+	%	{0}{{{\color{darkpink}0}}}{1}
+}
+
+%----------------------------------------------------------------------------------------
+
+\lstdefinestyle{codeMatlab} {
+	language		= Matlab,
+	basicstyle		= \linespread{1.0}\ttfamily\color{black}\bfseries\scriptsize,
+	identifierstyle	= \ttfamily\color{black},
+	keywordstyle	= \ttfamily\color{blue}\bfseries,  
+	stringstyle		= \ttfamily\color{magenta},
+	commentstyle	= \itshape\color{LimeGreen},
+	morecomment		= [l][\bfseries\color{red}]{\%\%},
+	morekeywords	= {syms,switch,case,otherwise,ones,class,inline,vectorize,factorial,xlim,ylim,ezplot,pie,ezmesh,ezsurf,ezcontour,ezplot3,solve,double,subs,fsolve,fminsearch,compose,jacobian,int,dblquad,triplequad,limit,finverse,simplify,taylor,symsum,evalin,symengine,matlabFunction,poly2sym,lsqcurvefit,ppval,dsolve},
+	literate		=*,
+	literate		=*
+	{^}{\textasciicircum}{1}
+}
+
+%----------------------------------------------------------------------------------------
+
+\lstdefinestyle{codePython}{
+	language        = Python,
+	basicstyle      = \linespread{1.0}\ttfamily\scriptsize\color{black},
+	identifierstyle = \ttfamily\color{black},
+	keywordstyle    = \color{blue}\bfseries,
+	stringstyle     = \color{LimeGreen},
+	commentstyle    = \itshape\color{cadetblue},
+	morekeywords    = {self},
+	emph            = {MyClass,__init__},
+	emphstyle       = \ttfamily\bfseries\color{red},
+	literate        = {^}{\textasciicircum}{1}
+}
+
+%----------------------------------------------------------------------------------------
+%https://www.alanshawn.com/tech/2019/09/01/emulate-terminal.html
+\definecolor{tergreen}{rgb}{0,0.6,0}
+\definecolor{tergray}{rgb}{0.5,0.5,0.5}
+\definecolor{termauve}{rgb}{0.58,0,0.82}
+\definecolor{terminalbgcolor}{HTML}{330033}
+\definecolor{terminalrulecolor}{HTML}{000099}
+\lstdefinestyle{console} {
+	backgroundcolor	= \color{terminalbgcolor},
+	basicstyle		= \linespread{1.0}\ttfamily\color{white}\bfseries\scriptsize,
+	identifierstyle	= \ttfamily\color{white}\bfseries\scriptsize,
+	breakatwhitespace=false,
+	breaklines		= true,
+	captionpos		= b,
+	commentstyle	= \color{tergreen},
+	deletekeywords	= {...},
+	escapeinside	= {\%*}{*)},
+	extendedchars	= true,
+	frame			= single,
+	keepspaces		= true,
+	keywordstyle	= \color{blue},
+	language		= {},
+	morekeywords	= {*,...},
+	numbers			= none,
+	numbersep		= 5pt,
+	framerule		= 2pt,
+	numberstyle		= \color{tergray}\tiny\selectfont,
+	rulecolor		= \color{terminalrulecolor},
+	showspaces		= false,
+	showstringspaces= false,
+	showtabs		= false,
+	stepnumber		= 2,
+	stringstyle		= \color{termauve},
+	tabsize			= 2,
+	literate		=*
+}
+
+% ----------------------------------------------------------------------------------------
+\lstdefinestyle{codeHTML}{
+    language=HTML,
+    basicstyle=\linespread{1.0}\ttfamily\scriptsize\color{black},
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{gray}\itshape,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=8pt,
+    backgroundcolor=\color{white},
+    showspaces=false,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single
+}
+

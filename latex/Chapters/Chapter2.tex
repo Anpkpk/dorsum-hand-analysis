@@ -1,0 +1,112 @@
+% Chương 2
+
+\chapter{CƠ SỞ LÝ THUYẾT}
+
+\label{Chapter2}
+
+%----------------------------------------------------------------------------------------
+
+\section{Tổng quan về khối dữ liệu 3D trong Y khoa}
+
+Nếu như trong ảnh 2D, đơn vị cơ bản cấu tạo nên bức ảnh là Điểm ảnh (Pixel -- Picture Element), thì trong không gian 3D, phần tử cơ bản được gọi là \textbf{Điểm thể tích (Voxel -- Volume Element)}. Mỗi voxel trong khối dữ liệu chứa một giá trị cường độ sáng tương ứng với mật độ quang học hoặc cấu trúc vật lý của mô tại tọa độ không gian $(x, y, z)$ đó~\cite{gonzalez2018digital}.
+
+Khối dữ liệu 3D thực chất là một tập hợp của hàng trăm đến hàng ngàn lát cắt 2D (Slices) được xếp chồng lên nhau dọc theo trục $Z$. Do kích thước dữ liệu khổng lồ (thường lên đến hàng tỷ voxel), việc truy xuất và xử lý khối dữ liệu này đòi hỏi tài nguyên bộ nhớ lớn và năng lực tính toán tốc độ cao.
+
+%----------------------------------------------------------------------------------------
+
+\section{Kiến trúc Lập trình song song CUDA}
+
+CUDA (Compute Unified Device Architecture) là một nền tảng tính toán song song và mô hình lập trình do NVIDIA phát triển, cho phép tận dụng tối đa sức mạnh của các Bộ xử lý đồ họa (GPU) để giải quyết các bài toán tính toán phức tạp~\cite{nvidia_cuda_guide}.
+
+Mô hình lập trình CUDA phân chia hệ thống thành hai phần chính:
+
+\begin{itemize}
+    \item \textbf{Host (Máy chủ):} Bao gồm CPU và bộ nhớ chính (RAM), đóng vai trò điều khiển luồng chương trình, cấu hình thông số và khởi tạo dữ liệu.
+    \item \textbf{Device (Thiết bị):} Bao gồm GPU và bộ nhớ video (VRAM), chuyên đảm nhận các tác vụ tính toán chuyên sâu mang tính lặp đi lặp lại.
+\end{itemize}
+
+\textbf{Cấu trúc phân cấp luồng (Thread Hierarchy):} Để quản lý hàng chục ngàn phép tính diễn ra cùng lúc, CUDA tổ chức các luồng thực thi theo ba cấp độ:
+
+\begin{enumerate}
+    \item \textbf{Thread (Luồng):} Đơn vị tính toán nhỏ nhất. Mỗi Thread thường chịu trách nhiệm tính toán cho đúng một điểm ảnh (pixel/voxel).
+    \item \textbf{Block (Khối):} Tập hợp của nhiều Thread. Các Thread trong cùng một Block có thể giao tiếp và chia sẻ dữ liệu với nhau thông qua bộ nhớ chung (Shared Memory).
+    \item \textbf{Grid (Lưới):} Tập hợp của nhiều Block. Kích thước của Grid được thiết kế để bao phủ toàn bộ không gian của khối dữ liệu cần xử lý.
+\end{enumerate}
+
+%----------------------------------------------------------------------------------------
+
+\section{Cơ sở thuật toán nhánh phân tích mạch máu (Vessel Analysis)}
+
+\subsection{Thuật toán chiếu ảnh cường độ tối đa (MIP)}
+
+MIP (Maximum Intensity Projection) là phương pháp nén khối dữ liệu 3D thành bản đồ 2D~\cite{defined_mip}. Thuật toán mô phỏng việc chiếu các tia sáng dọc theo trục $Z$ của khối. Trên mỗi đường truyền của tia từ mặt trên xuống mặt đáy, thuật toán sẽ lấy giá trị voxel có cường độ sáng lớn nhất để chiếu lên mặt phẳng 2D:
+\begin{equation}
+    I_{MIP}(x,y) = \max_{z=0}^{D-1} V(x, y, z)
+    \label{eq:mip}
+\end{equation}
+trong đó $V(x, y, z)$ là giá trị voxel tại tọa độ $(x, y, z)$ và $D$ là chiều sâu của khối dữ liệu.
+
+Do mạch máu thường có mức độ phản xạ quang học sáng hơn so với mô nền, thuật toán MIP giúp trích xuất toàn bộ mạng lưới mạch máu ẩn bên trong lớp da lên một bức ảnh bề mặt duy nhất.
+
+\subsection{Bộ lọc trung bình (Mean Filter)}
+
+Để loại bỏ nhiễu hạt xuất hiện trong quá trình chụp cắt lớp, bộ lọc không gian Mean Blur $3 \times 3$ được áp dụng:
+\begin{equation}
+    I_{blur}(x,y) = \frac{1}{9} \sum_{i=-1}^{1} \sum_{j=-1}^{1} I(x+i, y+j)
+    \label{eq:mean_blur}
+\end{equation}
+
+Kỹ thuật này giúp làm mịn nền mô và kết nối các đoạn mạch máu bị đứt gãy cục bộ~\cite{gonzalez2018digital}.
+
+\subsection{Thuật toán phân ngưỡng nhị phân (Thresholding)}
+
+Đây là bước tách nền, biến ảnh xám thành ảnh đen trắng (nhị phân). Mỗi điểm ảnh $I(x,y)$ được so sánh với một ngưỡng cường độ cố định $T$ (Ví dụ $T = 140$):
+\begin{equation}
+    I_{binary}(x,y) = 
+    \begin{cases}
+        255 & \text{nếu } I(x,y) > T \\
+        0   & \text{nếu } I(x,y) \leq T
+    \end{cases}
+    \label{eq:threshold}
+\end{equation}
+
+Kết quả của bước này là cơ sở để tính toán Mật độ mạch máu (Vessel Density).
+
+\subsection{Tính toán Mật độ mạch máu (Vessel Density)}
+
+Sau quá trình phân ngưỡng, mật độ mạch máu được tính bằng tỷ lệ phần trăm số lượng điểm ảnh thuộc mạch máu ($N_{vessel}$) trên tổng diện tích bề mặt ($W \times H$):
+\begin{equation}
+    \text{Vessel Density (\%)} = \frac{N_{vessel}}{W \times H} \times 100
+    \label{eq:vessel_density}
+\end{equation}
+
+%----------------------------------------------------------------------------------------
+
+\section{Phân tích kết cấu mô bằng ma trận GLCM (Texture Analysis)}
+
+Ma trận đồng xuất hiện mức xám (GLCM -- Gray-Level Co-Occurrence Matrix) xem xét mối quan hệ không gian giữa các cặp điểm ảnh liền kề~\cite{haralick1973glcm}. Cho một ảnh gốc với mức xám từ 0 đến 255, ma trận GLCM có kích thước $256 \times 256$. Một phần tử ở hàng $i$, cột $j$ lưu trữ tần suất mà một điểm ảnh có mức xám $i$ nằm ngay cạnh một điểm ảnh có mức xám $j$.
+
+Sau khi chuẩn hóa ma trận GLCM thành ma trận xác suất $P(i, j)$, các đặc trưng kết cấu lâm sàng quan trọng được trích xuất:
+
+\subsection{Độ tương phản }
+Đo lường mức độ biến thiên cường độ cục bộ:
+\begin{equation}
+    \text{Contrast} = \sum_{i,j} |i - j|^2 \cdot P(i,j)
+    \label{eq:contrast}
+\end{equation}
+
+\subsection{Độ đồng nhất }
+Đo lường sự chặt chẽ trong phân bố các phần tử trên GLCM so với đường chéo chính:
+\begin{equation}
+    \text{Homogeneity} = \sum_{i,j} \frac{P(i,j)}{1 + |i - j|}
+    \label{eq:homogeneity}
+\end{equation}
+
+\subsection{Năng lượng}
+Đo lường sự lặp lại của các cặp mức xám (còn gọi là độ đồng đều -- Uniformity):
+\begin{equation}
+    \text{Energy} = \sum_{i,j} P(i,j)^2
+    \label{eq:energy}
+\end{equation}
+
+%----------------------------------------------------------------------------------------

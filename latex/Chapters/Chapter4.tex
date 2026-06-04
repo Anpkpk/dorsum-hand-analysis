@@ -1,0 +1,140 @@
+% Chương 4
+
+\chapter{KẾT QUẢ THỰC NGHIỆM VÀ ĐÁNH GIÁ}
+
+\label{Chapter4}
+
+%----------------------------------------------------------------------------------------
+
+\section{Môi trường và Dữ liệu thực nghiệm}
+
+Quá trình biên dịch mã nguồn và thực nghiệm đo lường hiệu năng được triển khai trên nền tảng điện toán đám mây Google Colaboratory.
+
+\begin{itemize}
+    \item \textbf{Phần cứng (Hardware):} Hệ thống sử dụng máy ảo được cấu hình CPU của Google và bộ xử lý đồ họa (GPU) NVIDIA Tesla T4 được cấp phát từ nền tảng.
+    
+    \item \textbf{Phần mềm (Software):} Trình biên dịch NVIDIA CUDA Compiler (NVCC), mã nguồn viết bằng ngôn ngữ C++ tích hợp thư viện \code{cuda\_runtime.h}.
+    
+    \item \textbf{Dữ liệu đầu vào:} Khối dữ liệu chụp cắt lớp (Volume 3D) với kích thước $1000 \times 2048$ pixel mỗi lát cắt, bao gồm 500 lát cắt dọc theo trục $Z$. Tổng số lượng phần tử (voxel) cần xử lý lên tới hơn 1 tỷ điểm dữ liệu.
+\end{itemize}
+
+\begin{table}[h!]
+\caption{Thông số môi trường thực nghiệm}
+\label{tab:env}
+\centering
+\begin{tabular}{l l}
+    \toprule
+    \textbf{Thông số} & \textbf{Giá trị} \\
+    \midrule
+    Nền tảng & Google Colaboratory \\
+    GPU & NVIDIA Tesla T4 \\
+    Trình biên dịch & NVCC (CUDA Compiler) \\
+    Ngôn ngữ & CUDA C++ \\
+    Kích thước lát cắt & $1000 \times 2048$ pixels \\
+    Số lượng lát cắt & 500 slices \\
+    Tổng voxel & $\sim 1.024 \times 10^9$ \\
+    \bottomrule
+\end{tabular}
+\end{table}
+
+%----------------------------------------------------------------------------------------
+
+\section{Đánh giá tốc độ và Hiệu năng tính toán (Performance)}
+
+Kết quả thực nghiệm cho thấy sự vượt trội về thời gian thực thi (Execution Time) khi áp dụng kiến trúc Pipeline và Lập trình song song so với phương pháp truyền thống:
+
+\begin{itemize}
+    \item \textbf{Tối ưu hóa khâu I/O:} Việc loại bỏ hàng trăm tệp văn bản (\code{.txt}) và thay thế bằng việc nạp trực tiếp tệp nhị phân (\code{volume\_3d.raw}) đã giải quyết hoàn toàn nút thắt cổ chai của hệ thống. Thời gian nạp hơn 1 tỷ điểm dữ liệu từ ổ cứng (Disk) vào bộ nhớ RAM máy tính đã giảm từ mức hàng chục phút xuống chỉ còn khoảng \textbf{[Điền số giây lúc chạy]} giây.
+    
+    \item \textbf{Tốc độ thực thi thuật toán trên GPU:} Quá trình ép khối 3D xuống bản đồ 2D (MIP), chạy các bộ lọc cửa sổ trượt (Mean Blur), phân ngưỡng nhị phân và khởi tạo ma trận GLCM $256 \times 256$ đều diễn ra gần như tức thời. Tổng thời gian xử lý của toàn bộ các hàm Kernel trên GPU chỉ mất \textbf{[Điền ước lượng thời gian]}, minh chứng cho khả năng tăng tốc độ xử lý (Speed-up) cực kỳ mạnh mẽ của công nghệ CUDA khi xử lý khối lượng tính toán lặp đi lặp lại.
+\end{itemize}
+
+% TODO: Thêm bảng so sánh thời gian CPU vs GPU cho từng kernel
+
+%----------------------------------------------------------------------------------------
+
+\section{Đánh giá kết quả trực quan (Định tính)}
+
+Hệ thống đã kết xuất thành công các bản đồ hình ảnh tương ứng với từng giai đoạn xử lý:
+
+\begin{itemize}
+    \item \textbf{Ảnh MIP (Maximum Intensity Projection):} Thể hiện rõ toàn bộ cấu trúc hình thái của mạng lưới vi mạch máu và các mô nền xung quanh trên một mặt phẳng 2D duy nhất, không bị mất mát các nhánh mạch máu ẩn sâu.
+    
+    \item \textbf{Ảnh sau khi lọc (Mean Blur) và Phân ngưỡng (Thresholding):} Tách biệt thành công mạng lưới mạch máu (màu trắng -- 255) ra khỏi các mô nền và nhiễu (màu đen -- 0). Mạng lưới thu được có độ liên tục tốt, các mạch đứt gãy nhỏ đã được làm mịn và kết nối.
+\end{itemize}
+
+% TODO: Chèn hình ảnh minh họa kết quả MIP, Blur, Threshold
+
+%----------------------------------------------------------------------------------------
+
+\section{Đánh giá các chỉ số y khoa định lượng (Quantitative Metrics)}
+
+\subsection{Nhánh phân tích hình học (Mạch máu)}
+
+\begin{itemize}
+    \item Áp dụng phép đếm nguyên tử (\code{atomicAdd}), hệ thống ghi nhận có \textbf{[Điền số h\_white\_count]} điểm ảnh thuộc hệ thống mạch máu.
+    \item Tỷ lệ Mật độ mạch máu (Vessel Density) đo được trên toàn bề mặt là: \textbf{[Điền số] \%}.
+\end{itemize}
+
+\subsection{Nhánh phân tích kết cấu (Texture -- GLCM)}
+
+Dựa trên bản đồ MIP xám gốc, thuật toán GLCM đã trích xuất 3 đặc trưng kết cấu cơ bản:
+
+\begin{table}[h!]
+\caption{Kết quả trích xuất đặc trưng GLCM}
+\label{tab:glcm_results}
+\centering
+\begin{tabular}{l l l}
+    \toprule
+    \textbf{Đặc trưng} & \textbf{Giá trị} & \textbf{Ý nghĩa lâm sàng} \\
+    \midrule
+    Contrast & [Điền kết quả] & Độ sắc nét đường biên mạch máu \\
+    Homogeneity & [Điền kết quả] & Mức độ trơn láng cấu trúc mô \\
+    Energy & [Điền kết quả] & Mức độ trật tự vùng mức xám \\
+    \bottomrule
+\end{tabular}
+\end{table}
+
+%----------------------------------------------------------------------------------------
+
+\newpage
+\section*{KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}
+\addcontentsline{toc}{section}{Kết luận và Hướng phát triển}
+
+\subsection*{Kết luận}
+
+Đồ án đã hoàn thành mục tiêu đặt ra ban đầu là thiết kế và xây dựng thành công một hệ thống tiền xử lý và trích xuất đặc trưng ảnh y khoa 3D tốc độ cao.
+
+Những đóng góp chính của đề tài bao gồm:
+
+\begin{enumerate}
+    \item Xây dựng thành công quy trình (Pipeline) chuyển đổi định dạng và tối ưu hóa luồng dữ liệu I/O, khắc phục triệt để tình trạng thắt cổ chai khi đọc dữ liệu lớn.
+    
+    \item Hiện thực hóa các thuật toán xử lý ảnh phức tạp (MIP, Mean Filter, Thresholding, GLCM) bằng kỹ thuật Lập trình song song CUDA C++, tận dụng triệt để kiến trúc phần cứng của GPU NVIDIA.
+    
+    \item Trích xuất chính xác và nhanh chóng các chỉ số y khoa quan trọng (Mật độ mạch máu, Contrast, Homogeneity, Energy), đóng vai trò làm tiền đề cho các hệ thống hỗ trợ chẩn đoán bệnh lý tự động (CAD).
+\end{enumerate}
+
+\subsection*{Hạn chế của đồ án}
+
+Bên cạnh những kết quả đạt được, hệ thống vẫn còn một số điểm cần tối ưu thêm:
+
+\begin{itemize}
+    \item Thuật toán phân ngưỡng hiện tại đang sử dụng một giá trị cố định (Hardcoded Threshold $= 140$). Điều này có thể không chính xác nếu áp dụng lên các bộ dữ liệu ảnh y khoa khác có điều kiện ánh sáng và độ tương phản khác nhau.
+    
+    \item Các thuật toán dùng cửa sổ trượt (Mean Blur) và quét điểm lân cận (GLCM) mới chỉ thao tác trực tiếp trên bộ nhớ Global Memory của GPU. Chưa tận dụng được bộ nhớ tốc độ siêu cao Shared Memory của cấu trúc Block để tối ưu thêm băng thông truy xuất.
+\end{itemize}
+
+\subsection*{Hướng phát triển tương lai}
+
+Từ những hạn chế trên, đề tài mở ra các hướng phát triển tiếp theo:
+
+\begin{itemize}
+    \item Tích hợp thuật toán tự động tìm ngưỡng tối ưu (Ví dụ: Thuật toán Otsu) để hệ thống có thể thích ứng với mọi loại tập dữ liệu đầu vào.
+    
+    \item Tối ưu hóa sâu mã nguồn CUDA bằng cách nạp các khối ảnh nhỏ (Tiling) vào Shared Memory để tăng tốc độ cho nhánh xử lý không gian và nhánh xây dựng GLCM.
+    
+    \item Sử dụng các chỉ số kết cấu thu được từ GLCM làm vector đặc trưng (Feature Vector) đầu vào cho các mô hình Học máy (Machine Learning) như SVM hoặc Random Forest nhằm tự động phân loại mô khỏe mạnh và mô bệnh lý.
+\end{itemize}
+
+%----------------------------------------------------------------------------------------

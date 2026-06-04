@@ -1,0 +1,117 @@
+% Phụ lục A
+
+\chapter{Mã nguồn Kernel CUDA} % Tên của phụ lục
+
+\label{AppendixA} % Để trích dẫn chương này ở chỗ nào đó trong bài, hãy sử dụng lệnh \ref{AppendixA} 
+
+%----------------------------------------------------------------------------------------
+
+Do giới hạn về độ dài của phụ lục, chỉ trích dẫn các đoạn mã Kernel CUDA quan trọng nhất. Toàn bộ mã nguồn đầy đủ được lưu trữ trên GitHub hoặc Google Colab.
+
+\section{Kernel MIP Projection}
+
+Kernel chiếu cường độ tối đa, nén khối 3D thành bản đồ 2D:
+
+\begin{verbatim}
+__global__ void MIP_Projection(
+    unsigned char* d_volume, 
+    unsigned char* d_mip,
+    int W, int H, int D) 
+{
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    
+    if (x < W && y < H) {
+        unsigned char max_val = 0;
+        for (int z = 0; z < D; z++) {
+            unsigned char val = d_volume[z * W * H + y * W + x];
+            if (val > max_val) max_val = val;
+        }
+        d_mip[y * W + x] = max_val;
+    }
+}
+\end{verbatim}
+
+%----------------------------------------------------------------------------------------
+
+\section{Kernel Mean Blur}
+
+Kernel làm mờ trung bình với cửa sổ $3 \times 3$:
+
+\begin{verbatim}
+__global__ void Mean_Blur(
+    unsigned char* d_input, 
+    unsigned char* d_output,
+    int W, int H) 
+{
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    
+    if (x > 0 && x < W-1 && y > 0 && y < H-1) {
+        int sum = 0;
+        for (int dy = -1; dy <= 1; dy++) {
+            for (int dx = -1; dx <= 1; dx++) {
+                sum += d_input[(y+dy) * W + (x+dx)];
+            }
+        }
+        d_output[y * W + x] = (unsigned char)(sum / 9);
+    }
+}
+\end{verbatim}
+
+%----------------------------------------------------------------------------------------
+
+\section{Kernel Thresholding và Count Vessels}
+
+\begin{verbatim}
+__global__ void Thresholding(
+    unsigned char* d_input, 
+    unsigned char* d_output,
+    int W, int H, int threshold) 
+{
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    
+    if (x < W && y < H) {
+        int idx = y * W + x;
+        d_output[idx] = (d_input[idx] > threshold) ? 255 : 0;
+    }
+}
+
+__global__ void Count_Vessels(
+    unsigned char* d_binary, 
+    int* d_white_count,
+    int W, int H) 
+{
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    
+    if (x < W && y < H) {
+        if (d_binary[y * W + x] == 255) {
+            atomicAdd(d_white_count, 1);
+        }
+    }
+}
+\end{verbatim}
+
+%----------------------------------------------------------------------------------------
+
+\section{Kernel Compute GLCM}
+
+\begin{verbatim}
+__global__ void Compute_GLCM(
+    unsigned char* d_mip, 
+    int* d_glcm,
+    int W, int H) 
+{
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    
+    if (x < W-1 && y < H) {
+        int pixel_1 = d_mip[y * W + x];
+        int pixel_2 = d_mip[y * W + (x + 1)];
+        int index = pixel_1 * 256 + pixel_2;
+        atomicAdd(&d_glcm[index], 1);
+    }
+}
+\end{verbatim}

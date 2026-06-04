@@ -1,0 +1,45 @@
+%----------------------------------------------------------------------------------------
+%	(KHÔNG CHỈNH SỬA PHẦN NÀY)
+%
+%	Phần 6: TRANG TIÊU ĐỀ/TRANG BÌA (TITLE PAGE)
+%----------------------------------------------------------------------------------------
+
+% TRANG BÌA CHÍNH:
+\begin{titlepage}
+	\begin{tikzpicture}[overlay,remember picture]
+		\draw [line width=3pt]
+		($ (current page.north west) + (2.0cm,-2.0cm) $)
+		rectangle
+		($ (current page.south east) + (-1.5cm,1.8cm) $);
+		\draw [line width=1pt]
+		($ (current page.north west) + (2.15cm,-2.15cm) $)
+		rectangle
+		($ (current page.south east) + (-1.65cm,1.95cm) $); 
+	\end{tikzpicture}
+	\begin{center}
+		
+		\vspace{-.04\textheight}
+		\noindent%\scshape
+		\large \, \href{https://www.vnu.edu.vn/home/}{ĐẠI HỌC QUỐC GIA HÀ NỘI}\\
+		\vspace{-0.25cm}{\large \MakeUppercase \univname}\\
+		\vspace{-0.25cm}{\large \bfseries \MakeUppercase \deptname}\\[0.5cm]
+		\includegraphics{Logo/Logo_HUS_notext_nocolor}
+		
+		\vspace{1.0cm}
+		
+		{\large \MakeUppercase \authorname}
+		
+		\vspace{2.5cm}
+		
+		{\Large \bfseries \MakeUppercase\ttitle\par}
+		
+		\vspace{2.5cm}
+		
+		{\normalsize \docname\\ \fieldname\\ (\progname)\\}
+		
+		\vfill
+		
+		\textbf{Hà Nội - \the\year{}}
+	\end{center}
+\end{titlepage}
+
