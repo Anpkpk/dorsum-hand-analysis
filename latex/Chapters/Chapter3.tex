@@ -45,6 +45,8 @@ Nhờ định dạng Binary \code{.raw}, máy tính có thể nạp hàng tỷ b
 
 Để thực thi song song trên GPU, mạng lưới luồng (Grid) được thiết kế dựa trên kích thước của bề mặt ảnh 2D ($W \times H$). Cụ thể, ảnh được chia thành các Block nhỏ kích thước $16 \times 16$ threads. Số lượng Block được tự động tính toán bù trừ để đảm bảo phủ kín toàn bộ diện tích ảnh mà không bị tràn viền.
 
+
+
 \subsection{Kernel Chiếu ảnh cường độ tối đa (MIP\_Projection)}
 
 Thuật toán MIP duyệt qua toàn bộ chiều sâu $D$ của khối ảnh. Trong không gian 3D, mỗi luồng (thread) được gắn tọa độ $(x, y)$ tương ứng với một điểm ảnh trên mặt phẳng đích. GPU phân công mỗi luồng chỉ chạy 1 vòng lặp dọc theo trục $Z$. Luồng sẽ duyệt qua các giá trị tại tọa độ $(x, y, z)$ tương ứng, so sánh và lưu trữ giá trị cực đại tìm được vào biến \code{max\_val}, sau đó ghi thẳng vào mảng \code{d\_mip} 2D.
@@ -84,3 +86,4 @@ Tại chỉ số này, luồng tiếp tục gọi \code{atomicAdd()} để tăng
 \end{itemize}
 
 %----------------------------------------------------------------------------------------
+
