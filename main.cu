@@ -72,10 +72,10 @@
 //     cudaMemcpy(h_glcm, d_glcm, 256 * 256 * sizeof(int), cudaMemcpyDeviceToHost);
 
 //     // ====================================================================
-//     // HIỂN THỊ MA TRẬN GLCM (PHÒNG KHI THẦY HỎI)
+//     // HIỂN THỊ MA TRẬN GLCM
 //     // ====================================================================
-//     printf("\n--- TONG QUAN MA TRAN GLCM (Kich thuoc thuc: 256x256) ---\n");
-//     printf("In thu 10 hang va 10 cot dau tien de kiem tra:\n");
+//     // printf("\n--- TONG QUAN MA TRAN GLCM (Kich thuoc thuc: 256x256) ---\n");
+//     // printf("In thu 10 hang va 10 cot dau tien de kiem tra:\n");
     
 //     // for (int i = 0; i < 10; i++) {
 //     //     for (int j = 0; j < 10; j++) {
