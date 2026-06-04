@@ -87,7 +87,159 @@ Sau quá trình phân ngưỡng, mật độ mạch máu được tính bằng t
 Ma trận đồng xuất hiện mức xám (GLCM -- Gray-Level Co-Occurrence Matrix) xem xét mối quan hệ không gian giữa các cặp điểm ảnh liền kề~\cite{haralick1973glcm}. Cho một ảnh gốc với mức xám từ 0 đến 255, ma trận GLCM có kích thước $256 \times 256$. Một phần tử ở hàng $i$, cột $j$ lưu trữ tần suất mà một điểm ảnh có mức xám $i$ nằm ngay cạnh một điểm ảnh có mức xám $j$.
 
 Sau khi chuẩn hóa ma trận GLCM thành ma trận xác suất $P(i, j)$, các đặc trưng kết cấu lâm sàng quan trọng được trích xuất:
+\section*{Ví dụ tính ma trận GLCM}
 
+Cho ảnh mức xám:
+
+\[
+I=
+\begin{bmatrix}
+0 & 1 & 1 & 0\\
+0 & 1 & 2 & 2\\
+1 & 2 & 2 & 2\\
+0 & 1 & 2 & 1
+\end{bmatrix}
+\]
+
+Các mức xám xuất hiện trong ảnh là:
+
+\[
+\{0,1,2\}
+\]
+
+Chọn:
+
+\begin{itemize}
+    \item Khoảng cách \(d = 1\)
+    \item Hướng \(0^\circ\) (pixel bên phải)
+\end{itemize}
+
+Ta xét các cặp pixel kề nhau theo hàng:
+
+\begin{align*}
+(0,1),(1,1),(1,0) \\
+(0,1),(1,2),(2,2) \\
+(1,2),(2,2),(2,2) \\
+(0,1),(1,2),(2,1) 
+\end{align*}
+
+\section*{Đếm tần suất xuất hiện}
+
+\[
+\begin{array}{c|c}
+(i,j) & \text{Số lần xuất hiện} \\
+\hline
+(0,0) & 0 \\
+(0,1) & 3 \\
+(0,2) & 0 \\
+(1,0) & 1 \\
+(1,1) & 1 \\
+(1,2) & 3 \\
+(2,0) & 0 \\
+(2,1) & 1 \\
+(2,2) & 3
+\end{array}
+\]
+
+Từ đó thu được ma trận GLCM:
+
+\[
+GLCM=
+\begin{bmatrix}
+0 & 3 & 0\\
+1 & 1 & 3\\
+0 & 1 & 3
+\end{bmatrix}
+\]
+
+\section*{Chuẩn hóa ma trận GLCM}
+
+Tổng số cặp pixel:
+
+\[
+N = 12
+\]
+
+Ma trận xác suất:
+
+\[
+P
+=
+\frac{1}{12}
+\begin{bmatrix}
+0 & 3 & 0\\
+1 & 1 & 3\\
+0 & 1 & 3
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 & 0.25 & 0\\
+0.083 & 0.083 & 0.25\\
+0 & 0.083 & 0.25
+\end{bmatrix}
+\]
+
+\section*{Các đặc trưng trích xuất từ GLCM}
+
+\subsection*{1. Contrast}
+
+\[
+\text{Contrast}
+=
+\sum_{i,j}
+(i-j)^2P(i,j)
+\]
+
+Đặc trưng này đo độ tương phản của texture. Giá trị càng lớn thì ảnh càng có nhiều biên và chi tiết.
+
+\subsection*{2. Energy}
+
+\[
+\text{Energy}
+=
+\sum_{i,j}
+P(i,j)^2
+\]
+
+Đặc trưng này phản ánh mức độ đồng nhất của texture.
+
+\subsection*{3. Homogeneity}
+
+\[
+\text{Homogeneity}
+=
+\sum_{i,j}
+\frac{P(i,j)}
+{1+|i-j|}
+\]
+
+Giá trị lớn khi các pixel lân cận có mức xám gần giống nhau.
+
+\subsection*{4. Entropy}
+
+\[
+\text{Entropy}
+=
+-\sum_{i,j}
+P(i,j)\log P(i,j)
+\]
+
+Entropy càng lớn thì texture càng phức tạp.
+
+\subsection*{5. Correlation}
+
+\[
+\text{Correlation}
+=
+\frac{
+\sum_{i,j}
+(i-\mu_i)(j-\mu_j)P(i,j)
+}{
+\sigma_i\sigma_j
+}
+\]
+
+Đặc trưng này đo mức độ tương quan giữa các pixel lân cận.
 \subsection{Độ tương phản }
 Đo lường mức độ biến thiên cường độ cục bộ:
 \begin{equation}
