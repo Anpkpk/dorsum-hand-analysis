@@ -143,6 +143,100 @@ P(i, j) = \frac{C(i, j)}{\sum_{i=0}^{L-1} \sum_{j=0}^{L-1} C(i, j)}
 \label{eq:glcm_normalization}
 \end{equation}
 
+\section*{Ví dụ tính ma trận GLCM}
+
+Cho ảnh mức xám:
+
+\[
+I=
+\begin{bmatrix}
+0 & 1 & 1 & 0\\
+0 & 1 & 2 & 2\\
+1 & 2 & 2 & 2\\
+0 & 1 & 2 & 1
+\end{bmatrix}
+\]
+
+Các mức xám xuất hiện trong ảnh là:
+
+\[
+\{0,1,2\}
+\]
+
+Chọn:
+
+\begin{itemize}
+    \item Khoảng cách \(d = 1\)
+    \item Hướng \(0^\circ\) (pixel bên phải)
+\end{itemize}
+
+Ta xét các cặp pixel kề nhau theo hàng:
+
+\begin{align*}
+(0,1),(1,1),(1,0) \\
+(0,1),(1,2),(2,2) \\
+(1,2),(2,2),(2,2) \\
+(0,1),(1,2),(2,1) 
+\end{align*}
+
+\section*{Đếm tần suất xuất hiện}
+
+\[
+\begin{array}{c|c}
+(i,j) & \text{Số lần xuất hiện} \\
+\hline
+(0,0) & 0 \\
+(0,1) & 3 \\
+(0,2) & 0 \\
+(1,0) & 1 \\
+(1,1) & 1 \\
+(1,2) & 3 \\
+(2,0) & 0 \\
+(2,1) & 1 \\
+(2,2) & 3
+\end{array}
+\]
+
+Từ đó thu được ma trận GLCM:
+
+\[
+GLCM=
+\begin{bmatrix}
+0 & 3 & 0\\
+1 & 1 & 3\\
+0 & 1 & 3
+\end{bmatrix}
+\]
+
+\section*{Chuẩn hóa ma trận GLCM}
+
+Tổng số cặp pixel:
+
+\[
+N = 12
+\]
+
+Ma trận xác suất:
+
+\[
+P
+=
+\frac{1}{12}
+\begin{bmatrix}
+0 & 3 & 0\\
+1 & 1 & 3\\
+0 & 1 & 3
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 & 0.25 & 0\\
+0.083 & 0.083 & 0.25\\
+0 & 0.083 & 0.25
+\end{bmatrix}
+\]
+
+
+
 Từ ma trận xác suất đồng xuất hiện $P(i, j)$, các đặc trưng kết cấu mang thông tin kiểu hình lâm sàng quan trọng được trích xuất cụ thể như sau:
 
 \subsection{Độ tương phản (Contrast)}
@@ -175,4 +269,38 @@ Năng lượng (\textit{Energy}), hay còn được gọi là Mô-men góc thứ
 
 Khi một vùng ảnh chứa các cấu trúc hoa văn lặp đi lặp lại một cách tuần hoàn, có tổ chức hoặc phân bố mức xám rất tập trung, ma trận xác suất $P(i, j)$ sẽ xuất hiện một vài ô có giá trị xác suất rất cao vượt trội. Phép bình phương $\left[ P(i, j) \right]^2$ sẽ làm khuếch đại các giá trị cao này, dẫn đến tổng chỉ số Energy lớn. Trong phân tích lâm sàng, chỉ số Energy cao đại diện cho các mô có cấu trúc hình thái ổn định, được tổ chức tốt; trong khi giá trị thấp thường cảnh báo một vùng mô hỗn loạn, vô tổ chức (đặc trưng thường thấy ở các vùng mô tăng sinh ác tính hoặc các tế bào ung thư phát triển vô hướng).
 
+
+\subsection{Entropy}
+
+Entropy là đại lượng thống kê đo lường mức độ ngẫu nhiên, sự hỗn loạn hoặc độ phức tạp về mặt thông tin của các giá trị mức xám trong vùng không gian khảo sát. Đối với ma trận đồng xuất hiện mức xám (\textit{GLCM}) đã được chuẩn hóa thành ma trận xác suất $P(i, j)$, công thức toán học để xác định chỉ số Entropy được biểu diễn như sau:
+
+\begin{equation}
+    \text{Entropy} = - \sum_{i=0}^{255} \sum_{j=0}^{255} P(i, j) \log P(i, j)
+    \label{eq:glcm_entropy}
+\end{equation}
+
+Trong đó, $P(i, j)$ đại diện cho giá trị xác suất xuất hiện của cặp mức xám $(i, j)$ tại một khoảng cách và hướng dịch tâm nhất định trên bề mặt ảnh phẳng. Theo quy ước toán học chuẩn, đối với các phần tử ma trận có xác suất bằng 0 ($P(i, j) = 0$), giá trị của biểu thức $0 \log_{2}(0)$ sẽ được gán mặc định bằng 0 để tránh lỗi vô định.
+
+\textbf{Ý nghĩa vật lý:} Giá trị Entropy tỉ lệ thuận với độ phức tạp của kết cấu bề mặt ảnh (\textit{texture complexity}). Khi hình ảnh chứa mạng lưới mạch máu phân nhánh dày đặc, đan xen phức tạp và có sự biến đổi mức xám liên tục, các phần tử trong ma trận xác suất $P(i, j)$ sẽ bị phân tán đều ra nhiều vị trí khác nhau, khiến cho giá trị Entropy đạt mức rất lớn. Ngược lại, tại các vùng ảnh có kết cấu mịn, đồng nhất và ít biến động (như các vùng mô nền hoặc da), ma trận xác suất $P(i, j)$ sẽ chỉ tập trung mật độ cao vào một vài chỉ số cố định, làm cho giá trị Entropy giảm đi rõ rệt.
+
+\subsection{Correlation}
+
+Correlation (Mức độ tương quan không gian) là chỉ số đo lường mức độ phụ thuộc tuyến tính về mặt mức xám giữa các cặp điểm ảnh kế cận nhau dọc theo hướng dịch tâm được cấu hình (ví dụ: độ dời ngang $dx = 1, dy = 0$). Công thức toán học để tính toán đặc trưng Correlation được xác định thông qua biểu thức:
+
+\begin{equation}
+    \text{Correlation} = \sum_{i=0}^{255} \sum_{j=0}^{255} \frac{(i - \mu_i)(j - \mu_j)P(i, j)}{\sigma_i \sigma_j}
+    \label{eq:glcm_correlation}
+\end{equation}
+
+Trong đó, các giá trị kỳ vọng toán học ($\mu_i, \mu_j$) và độ lệch chuẩn ($\sigma_i, \sigma_j$) của các hàng và các cột trong ma trận xác suất GLCM được tính toán dựa trên các công thức thành phần sau:
+
+\begin{equation}
+    \mu_i = \sum_{i=0}^{255} i \sum_{j=0}^{255} P(i, j), \quad \mu_j = \sum_{j=0}^{255} j \sum_{i=0}^{255} P(i, j)
+\end{equation}
+
+\begin{equation}
+    \sigma_i^2 = \sum_{i=0}^{255} (i - \mu_i)^2 \sum_{j=0}^{255} P(i, j), \quad \sigma_j^2 = \sum_{j=0}^{255} (j - \mu_j)^2 \sum_{i=0}^{255} P(i, j)
+\end{equation}
+
+\textbf{Ý nghĩa vật lý:} Chỉ số Correlation đo đạc tính chất tuần hoàn hoặc khả năng dự đoán của các cấu trúc điểm ảnh lân cận, với miền giá trị nghiêm ngặt nằm trong khoảng $[-1, 1]$. Khi chỉ số này tiến gần đến giá trị $1$, điều đó chứng tỏ các điểm ảnh kế cận có xu hướng mang mức xám tương đồng cao hoặc thay đổi theo một quy luật tuyến tính chặt chẽ, biểu thị cho các cấu trúc mạch máu chạy liên tục và kéo dài dọc theo hướng quét. Ngược lại, nếu giá trị Correlation thấp hoặc tiến dần về mức số $0$, nó phản ánh mức xám của các pixel lân cận hoàn toàn độc lập, không có mối ràng buộc không gian, thường đặc trưng cho các vùng biên ranh giới chuyển tiếp đột ngột hoặc vùng bị ảnh hưởng bởi nhiễu tần số cao.
 %----------------------------------------------------------------------------------------

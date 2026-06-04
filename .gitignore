@@ -1,0 +1,24 @@
+# LaTeX
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+
+# Build PDF (nếu không muốn lưu PDF)
+*.pdf
+
+# OS
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
