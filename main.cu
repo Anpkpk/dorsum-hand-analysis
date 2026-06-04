@@ -71,6 +71,20 @@
 //     int h_glcm[256 * 256];
 //     cudaMemcpy(h_glcm, d_glcm, 256 * 256 * sizeof(int), cudaMemcpyDeviceToHost);
 
+//     // ====================================================================
+//     // HIỂN THỊ MA TRẬN GLCM (PHÒNG KHI THẦY HỎI)
+//     // ====================================================================
+//     printf("\n--- TONG QUAN MA TRAN GLCM (Kich thuoc thuc: 256x256) ---\n");
+//     printf("In thu 10 hang va 10 cot dau tien de kiem tra:\n");
+    
+//     // for (int i = 0; i < 10; i++) {
+//     //     for (int j = 0; j < 10; j++) {
+//     //         // In mỗi số chiếm khoảng trống 5 ký tự để căn lề cho đẹp
+//     //         printf("%5d ", h_glcm[i * 256 + j]); 
+//     //     }
+//     //     printf("\n");
+//     // }
+
 //     // Tính tổng để chuẩn hóa
 //     double total_pairs = 0;
 //     for (int i = 0; i < 256 * 256; i++) total_pairs += h_glcm[i];
@@ -91,6 +105,27 @@
 //     printf("=> Contrast    : %f\n", contrast);
 //     printf("=> Homogeneity : %f\n", homogeneity);
 //     printf("=> Energy      : %f\n", energy);
+
+//     // ====================================================================
+//     // BƯỚC CUỐI: LƯU ẢNH KẾT QUẢ ĐỂ KIỂM CHỨNG BẰNG IMAGEJ
+//     // ====================================================================
+//     printf("\nDang xuat anh ket qua ra file RAW...\n");
+    
+//     // 1. Cấp phát mảng tạm trên RAM (CPU) để hứng dữ liệu từ GPU về
+//     unsigned char* h_mip = new unsigned char[frame_pixels];
+    
+//     // 2. Copy dữ liệu từ Device (GPU) về lại Host (CPU)
+//     cudaMemcpy(h_mip, d_mip, frame_pixels * sizeof(unsigned char), cudaMemcpyDeviceToHost);
+    
+//     // 3. Ghi dữ liệu ra các file nhị phân (RAW)
+//     FILE* f_mip = fopen("ketqua_MIP.raw", "wb");
+//     if(f_mip) { fwrite(h_mip, sizeof(unsigned char), frame_pixels, f_mip); fclose(f_mip); }
+    
+//     // 4. Dọn dẹp RAM máy tính
+//     delete[] h_mip;
+
+//     printf("Da luu thanh cong file: ketqua_MIP.raw\n");
+//     printf("=> Hay mo file nay bang ImageJ (Size: 1000x2048, 8-bit) de xem ket qua!\n");
 
 //     // 4. DỌN DẸP BỘ NHỚ (Đừng quên giải phóng nhé)
 //     cudaFree(d_volume); cudaFree(d_mip); cudaFree(d_glcm);
@@ -170,6 +205,37 @@ int main() {
     int h_white_count = 0;
     cudaMemcpy(&h_white_count, d_white_count, sizeof(int), cudaMemcpyDeviceToHost);
     printf("=> Mat do mach mau: %.2f%%\n\n", (float)h_white_count / frame_pixels * 100.0f);
+
+    // ====================================================================
+    // BƯỚC CUỐI: LƯU ẢNH KẾT QUẢ ĐỂ KIỂM CHỨNG BẰNG IMAGEJ
+    // ====================================================================
+    printf("\nDang xuat anh ket qua ra file RAW...\n");
+
+    // 1. Cấp phát mảng tạm trên RAM (CPU) để hứng dữ liệu từ GPU về
+    unsigned char* h_mip = new unsigned char[frame_pixels];
+    unsigned char* h_blurred = new unsigned char[frame_pixels];
+    unsigned char* h_binary = new unsigned char[frame_pixels];
+
+    // 2. Copy dữ liệu từ Device (GPU) về lại Host (CPU)
+    cudaMemcpy(h_mip, d_mip, frame_pixels * sizeof(unsigned char), cudaMemcpyDeviceToHost);
+    cudaMemcpy(h_blurred, d_blurred, frame_pixels * sizeof(unsigned char), cudaMemcpyDeviceToHost);
+    cudaMemcpy(h_binary, d_binary, frame_pixels * sizeof(unsigned char), cudaMemcpyDeviceToHost);
+
+    // 3. Ghi dữ liệu ra các file nhị phân (RAW)
+    FILE* f_mip = fopen("ketqua_1_MIP.raw", "wb");
+    if(f_mip) { fwrite(h_mip, sizeof(unsigned char), frame_pixels, f_mip); fclose(f_mip); }
+
+    FILE* f_blur = fopen("ketqua_2_Blur.raw", "wb");
+    if(f_blur) { fwrite(h_blurred, sizeof(unsigned char), frame_pixels, f_blur); fclose(f_blur); }
+
+    FILE* f_binary = fopen("ketqua_3_Binary.raw", "wb");
+    if(f_binary) { fwrite(h_binary, sizeof(unsigned char), frame_pixels, f_binary); fclose(f_binary); }
+
+    // 4. Dọn dẹp RAM máy tính
+    delete[] h_mip; delete[] h_blurred; delete[] h_binary;
+
+    printf("Da luu thanh cong 3 file: ketqua_1_MIP.raw, ketqua_2_Blur.raw, ketqua_3_Binary.raw\n");
+    printf("=> Hay mo 3 file nay bang ImageJ (Size: 1000x2048, 8-bit) de xem ket qua!\n");
 
     cudaFree(d_volume); cudaFree(d_mip); cudaFree(d_blurred); cudaFree(d_binary); cudaFree(d_white_count);
 }
