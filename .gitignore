@@ -1,0 +1,91 @@
+# C++ and Build Artifacts
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+*.dylib
+*.exe
+*.out
+build/
+dist/
+*.cmake
+CMakeCache.txt
+CMakeFiles/
+
+# CUDA
+*.cu.o
+*.ptx
+*.cubin
+*.fatbin
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
+venv/
+ENV/
+env/
+.venv
+
+# LaTeX
+*.aux
+*.log
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.out
+*.toc
+*.lof
+*.lot
+*.run.xml
+*.synctex.gz
+*.pdf
+
+# IDE and Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.git/
+Thumbs.db
+
+# Output and Data
+output/*.txt
+output/*.npy
+*.npy
+*.npz
+*.raw
+
+# OS
+.DS_Store
+Thumbs.db
+*.tmp
+
+# Editor backups
+*.bak
+*.backup
