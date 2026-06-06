@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian) (preloaded format=pdflatex 2026.4.24)  6 JUN 2026 09:45
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian) (preloaded format=pdflatex 2026.4.24)  6 JUN 2026 09:51
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1495,7 +1495,7 @@ Package csquotes Warning: No space factor codes for 'T5' encoding.
 Package csquotes Warning: No space factor codes for 'T5' encoding.
 (csquotes)                Punctuation tracker may fail on input line 19.
 
-<Figures/Chapter/1.png, id=300, 558.58687pt x 436.63126pt>
+<Figures/Chapter/1.png, id=301, 558.58687pt x 436.63126pt>
 File: Figures/Chapter/1.png Graphic file (type png)
 <use Figures/Chapter/1.png>
 Package pdftex.def Info: Figures/Chapter/1.png  used on input line 23.
@@ -1519,7 +1519,7 @@ Package csquotes Warning: No space factor codes for 'T5' encoding.
 
 
 [6 <./Figures/Chapter/1.png>]
-<Figures/Chapter/2.png, id=321, 399.74344pt x 303.38344pt>
+<Figures/Chapter/2.png, id=322, 399.74344pt x 303.38344pt>
 File: Figures/Chapter/2.png Graphic file (type png)
 <use Figures/Chapter/2.png>
 Package pdftex.def Info: Figures/Chapter/2.png  used on input line 58.
@@ -1651,16 +1651,16 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 Here is how much of TeX's memory you used:
  46308 strings out of 473197
  990417 string characters out of 5718605
- 1681455 words of memory out of 5000000
+ 1681530 words of memory out of 5000000
  68770 multiletter control sequences out of 15000+600000
  612256 words of font info for 92 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  96i,20n,122p,1936b,2915s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/vntex/urwvn/ucrr8v.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/symbol/usyr.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/symbol/usyr.pfb></usr/share/texlive/texmf-dist/fonts/type1/vntex/urwvn/utmb8v.pfb></usr/share/texlive/texmf-dist/fonts/type1/vntex/urwvn/utmbi8v.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/vntex/urwvn/utmr8v.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/vntex/urwvn/utmri8v.pfb>
-Output written on main.pdf (39 pages, 753118 bytes).
+Output written on main.pdf (39 pages, 753321 bytes).
 PDF statistics:
- 545 PDF objects out of 1000 (max. 8388607)
- 465 compressed objects within 5 object streams
+ 546 PDF objects out of 1000 (max. 8388607)
+ 466 compressed objects within 5 object streams
  114 named destinations out of 1000 (max. 500000)
  369 words of extra memory for PDF output out of 10000 (max. 10000000)
 
