@@ -6,21 +6,96 @@
 
 %----------------------------------------------------------------------------------------
 
-\section{Kiến trúc hệ thống tổng quát (System Pipeline)}
+\section{Kiến trúc hệ thống tổng quát}
 
-Hệ thống xử lý khối ảnh y khoa 3D được thiết kế theo mô hình luồng dữ liệu (Data Pipeline), phân chia rõ ràng các tác vụ giữa CPU (Host) và GPU (Device) nhằm tận dụng tối đa băng thông bộ nhớ và năng lực tính toán song song. Cấu trúc hệ thống bao gồm 3 giai đoạn chính:
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\linewidth]{Figures/Chapter/3.png}
+    \caption{System Pipeline}
+    \label{fix:chapter1_3}
+\end{figure}
 
-\begin{enumerate}
-    \item \textbf{Giai đoạn 1: Tiền xử lý dữ liệu I/O (CPU):} Chuyển đổi định dạng dữ liệu đầu vào từ dạng văn bản phân mảnh sang dạng nhị phân nguyên khối.
-    
-    \item \textbf{Giai đoạn 2: Trích xuất bản đồ 2D (GPU):} Nạp toàn bộ khối dữ liệu 3D lên VRAM và thực thi thuật toán MIP để ép xuống mặt phẳng 2D.
-    
-    \item \textbf{Giai đoạn 3: Xử lý song song đa nhánh (GPU \& CPU):} Từ bản đồ 2D gốc, luồng thực thi được chia làm hai nhánh độc lập:
+% Hệ thống xử lý khối ảnh y khoa 3D được thiết kế theo mô hình luồng dữ liệu (Data Pipeline), phân chia rõ ràng các tác vụ giữa CPU (Host) và GPU (Device) nhằm tận dụng tối đa băng thông bộ nhớ và năng lực tính toán song song. Cấu trúc hệ thống bao gồm các giai đoạn và nhánh xử lý chính như sau:
+
+Hệ thống xử lý khối ảnh y khoa 3D được thiết kế theo mô hình luồng dữ liệu (Data Pipeline), trong đó dữ liệu được tổ chức và xử lý tuần tự qua nhiều giai đoạn nhằm đảm bảo tính liên tục, hiệu quả và khả năng mở rộng của hệ thống. Kiến trúc này cho phép phân chia rõ ràng các nhiệm vụ giữa CPU (Host) và GPU (Device), tận dụng ưu điểm của từng thành phần phần cứng để đạt được hiệu năng xử lý cao đối với các tập dữ liệu ảnh y khoa có kích thước lớn.
+
+Toàn bộ quá trình xử lý được xây dựng theo hướng tối ưu hóa việc quản lý dữ liệu, giảm thiểu thời gian truy xuất bộ nhớ và tăng cường khả năng tính toán song song. Dữ liệu ảnh đầu vào sau khi được nạp vào hệ thống sẽ trải qua các bước xử lý cần thiết trước khi được chuyển đến các mô-đun tính toán chuyên biệt. Việc phân tách các giai đoạn xử lý thành những thành phần độc lập giúp hệ thống dễ dàng bảo trì, nâng cấp và tích hợp thêm các thuật toán mới trong tương lai.
+
+Trong kiến trúc này, CPU đóng vai trò điều phối luồng thực thi, quản lý tài nguyên và thực hiện các tác vụ điều khiển hệ thống, trong khi GPU đảm nhiệm các phép tính có độ phức tạp cao và yêu cầu khả năng xử lý song song trên khối lượng dữ liệu lớn. Cách tiếp cận này giúp khai thác hiệu quả năng lực tính toán của phần cứng hiện đại, đồng thời giảm đáng kể thời gian xử lý so với các mô hình thực thi tuần tự truyền thống.
+
+Bên cạnh đó, hệ thống được xây dựng theo cơ chế pipeline cho phép các giai đoạn xử lý dữ liệu hoạt động liên tục và có thể chồng lấp về mặt thời gian. Nhờ vậy, quá trình xử lý ảnh y khoa 3D đạt được hiệu suất cao hơn, giảm thiểu các khoảng thời gian chờ giữa các bước xử lý và nâng cao khả năng đáp ứng đối với các ứng dụng yêu cầu tốc độ xử lý lớn trong lĩnh vực y tế và nghiên cứu hình ảnh y khoa.
+
+Cấu trúc tổng thể của hệ thống bao gồm nhiều giai đoạn và các nhánh xử lý chuyên biệt, được tổ chức theo luồng dữ liệu thống nhất từ đầu vào đến đầu ra. Mỗi thành phần trong hệ thống đảm nhận một vai trò cụ thể và phối hợp chặt chẽ với các thành phần còn lại nhằm đảm bảo dữ liệu được xử lý chính xác, hiệu quả và ổn định trong suốt quá trình thực thi.
+
+\begin{itemize}
+    \item []\textbf{1. Giai đoạn 1: Tiền xử lý dữ liệu I/O (CPU)}
+    \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Figures/Chapter/4.png}
+    \caption{Tiền xử lý dữ liệu}
+    \label{fix:chapter1_4}
+    \end{figure}
     \begin{itemize}
-        \item \textit{Nhánh 1 (Vessel Analysis):} Xử lý hình thái mạch máu (Làm mờ $\rightarrow$ Phân ngưỡng $\rightarrow$ Đếm điểm ảnh).
-        \item \textit{Nhánh 2 (Texture Analysis):} Xử lý kết cấu mô (Khởi tạo GLCM bằng GPU $\rightarrow$ Trích xuất đặc trưng toán học bằng CPU).
+        \item \textbf{TXT Slices:} Đọc dữ liệu đầu vào từ các lát cắt hình ảnh y khoa dưới dạng tệp văn bản (text).
+        \item \textbf{Convert Binary:} Chuyển đổi dữ liệu từ định dạng văn bản sang định dạng nhị phân (Binary) để tối ưu hóa không gian lưu trữ và tăng tốc độ đọc/ghi dữ liệu.
+        \item \textbf{3D Volume:} Ghép nối và tái tạo các lát cắt 2D đã được xử lý thành một khối dữ liệu không gian 3 chiều (3D Volume) hoàn chỉnh.
     \end{itemize}
-\end{enumerate}
+
+    \item[] \textbf{2. Giai đoạn 2: Trích xuất bản đồ 2D (GPU)}
+    
+    \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Figures/Chapter/5.png}
+    \caption{Trích xuất bản đồ 2D}
+    \label{fix:chapter1_5}
+    \end{figure}
+
+    \begin{itemize}
+        \item \textbf{Upload Volume lên VRAM:} Chuyển khối dữ liệu 3D từ bộ nhớ chính (RAM của CPU) sang bộ nhớ video (VRAM của GPU) nhằm tận dụng năng lực tính toán song song cường độ cao.
+        \item \textbf{MIP Projection:} Áp dụng kỹ thuật chiếu cường độ tối đa (Maximum Intensity Projection - MIP) dọc theo một trục nhìn nhất định để làm phẳng khối 3D.
+        \item \textbf{Bản đồ 2D:} Thu được kết quả đầu ra là một bản đồ 2D (2D Map) thể hiện rõ nét các cấu trúc có cường độ tín hiệu cao (như mạng lưới mạch máu).
+    \end{itemize}
+
+    \item []\textbf{3. Giai đoạn 3: Xử lý song song đa nhánh (GPU \& CPU)}
+    \begin{itemize}
+        \item \textbf{Nhánh 1: Vessel Analysis}
+        
+        \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.9\linewidth]{Figures/Chapter/6.png}
+        \caption{Phân tích mạch máu}
+        \label{fix:chapter1_6}
+        \end{figure}
+
+        \begin{itemize}
+            \item \textit{Làm mờ:} Áp dụng các bộ lọc không gian để làm mịn ảnh và giảm thiểu nhiễu.
+            \item \textit{Phân ngưỡng:} Sử dụng kỹ thuật phân ngưỡng (Thresholding) để phân tách rõ ràng cấu trúc mạch máu ra khỏi vùng nền.
+            \item \textit{Đếm điểm ảnh:} Đếm tổng số lượng điểm ảnh (pixels) thuộc về lớp mạch máu đã được phân tách.
+            \item \textit{Mật độ mạch máu:} Tính toán và xuất ra tham số định lượng về mật độ mạch máu trên toàn bộ vùng khảo sát.
+        \end{itemize}
+        
+        \item \textbf{Nhánh 2: Texture Analysis}
+        
+        \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.9\linewidth]{Figures/Chapter/7.png}
+        \caption{Phân tích kết cấu}
+        \label{fix:chapter1_7}
+        \end{figure}
+                
+        \begin{itemize}
+            \item \textit{Khởi tạo GLCM:} Xây dựng ma trận đồng mức xám (Gray-Level Co-occurrence Matrix - GLCM) từ bản đồ 2D để đánh giá mối quan hệ không gian giữa các mức xám.
+            \item \textit{Trích xuất đặc trưng:} Dựa trên GLCM, hệ thống tiến hành tính toán và trích xuất 4 đặc trưng thống kê kết cấu cốt lõi, bao gồm:
+            \begin{enumerate}
+                \item \textbf{Contrast:} Độ tương phản.
+                \item \textbf{Energy:} Năng lượng.
+                \item \textbf{Homogeneity:} Độ đồng nhất.
+                \item \textbf{Correlation:} Độ tương quan.
+            \end{enumerate}
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
 
 % TODO: Vẽ một Sơ đồ khối ba giai đoạn trên
 

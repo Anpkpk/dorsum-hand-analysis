@@ -1,8 +1,8 @@
-PWD d:/HUS/Parallel Programming/baocao/dorsum-hand-analysis/latex
+PWD d:/HUS/Parallel Programming/baocao1/dorsum-hand-analysis/latex
 INPUT c:/texlive/2025/texmf.cnf
 INPUT c:/texlive/2025/texmf-dist/web2c/texmf.cnf
 INPUT c:/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt
-INPUT d:/HUS/Parallel Programming/baocao/dorsum-hand-analysis/latex/main.tex
+INPUT d:/HUS/Parallel Programming/baocao1/dorsum-hand-analysis/latex/main.tex
 OUTPUT main.log
 INPUT ./HUSdissertation.cls
 INPUT HUSdissertation.cls
@@ -581,6 +581,31 @@ OUTPUT Chapters/Chapter3.aux
 INPUT ./Chapters/Chapter3.tex
 INPUT ./Chapters/Chapter3.tex
 INPUT Chapters/Chapter3.tex
+INPUT ./Figures/Chapter/3.png
+INPUT ./Figures/Chapter/3.png
+INPUT ./Figures/Chapter/3.png
+INPUT ./Figures/Chapter/3.png
+INPUT ./Figures/Chapter/3.png
+INPUT ./Figures/Chapter/4.png
+INPUT ./Figures/Chapter/4.png
+INPUT ./Figures/Chapter/4.png
+INPUT ./Figures/Chapter/4.png
+INPUT ./Figures/Chapter/4.png
+INPUT ./Figures/Chapter/5.png
+INPUT ./Figures/Chapter/5.png
+INPUT ./Figures/Chapter/5.png
+INPUT ./Figures/Chapter/5.png
+INPUT ./Figures/Chapter/5.png
+INPUT ./Figures/Chapter/6.png
+INPUT ./Figures/Chapter/6.png
+INPUT ./Figures/Chapter/6.png
+INPUT ./Figures/Chapter/6.png
+INPUT ./Figures/Chapter/6.png
+INPUT ./Figures/Chapter/7.png
+INPUT ./Figures/Chapter/7.png
+INPUT ./Figures/Chapter/7.png
+INPUT ./Figures/Chapter/7.png
+INPUT ./Figures/Chapter/7.png
 INPUT c:/texlive/2025/texmf-dist/tex/latex/vntex/t5pcr.fd
 INPUT c:/texlive/2025/texmf-dist/tex/latex/vntex/t5pcr.fd
 INPUT c:/texlive/2025/texmf-dist/tex/latex/vntex/t5pcr.fd
