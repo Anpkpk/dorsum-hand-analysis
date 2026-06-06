@@ -1,61 +1,100 @@
-// Code dung de chuyen 500 file anh txt thanh file raw
 #include <iostream>
-#include <stdio.h>
+#include <cstdio>
 #include <string>
+#include <vector>
 
 using namespace std;
 
-// �?t k�ch thu?c theo d�ng file c?a b?n
-const int W = 1000; 
-const int H = 2048; 
-const int D = 20;  
+// o
+const int W = 560;
+const int H = 1000;
+const int D = 500; 
 
-int main() {
-    long long total_pixels = (long long)W * H * D;
-    
-    // T?o m?ng 8-bit (unsigned char) d? ImageJ d? d?c nh?t
-    unsigned char* raw_data = new unsigned char[total_pixels];
+// ro
+// const int W = 560;
+// const int H = 1000;
+// const int D = 500; // 496 
 
-    cout << "Bat dau doc 500 file txt. Vui long doi..." << endl;
+// normal
+// const int W = 1000;
+// const int H = 2048;
+// const int D = 500; 
 
-    for (int z = 0; z < D; z++) {
-        string filename = "output/o/o_" + to_string(z + 1) + ".txt";
-        
-        // D�ng fopen thay v� ifstream d? d?c si�u t?c
-        FILE* file = fopen(filename.c_str(), "r");
-        if (!file) {
-            cout << "Loi: Khong mo duoc file " << filename << endl;
-            return -1;
-        }
+int main()
+{
+    const long long pixels_per_slice = (long long)W * H;
 
-        long long offset = (long long)z * W * H;
-        float val;
-        
-        // �?c t?ng con s? trong file txt
-        for (int i = 0; i < W * H; i++) {
-            if (fscanf(file, "%f", &val) != 1) break;
+    FILE* out =
+        fopen("volume_3d_ro.raw", "wb");
 
-            // B? ph�p chia 4095 di! Gi? nguy�n gi� tr? g?c.
-            int pixel = (int)val;
+    // FILE* out =
+    //     fopen("volume_3d_o.raw", "wb");
 
-            raw_data[offset + i] = (unsigned char)pixel;
-        }
-        fclose(file);
+    // FILE* out =
+    //     fopen("volume_3d_normal.raw", "wb");
 
-        if ((z + 1) % 50 == 0) cout << "Da doc xong " << z + 1 << "/500 file..." << endl;
+    if (!out) {
+        cerr << "Khong tao duoc file output\n";
+        return -1;
     }
 
-    cout << "------------------------------------------" << endl;
-    cout << "Dang ghi toan bo ra file volume_3d.raw..." << endl;
-    
-    // Ghi m?ng RAM ra 1 file nh? ph�n duy nh?t
-    // FILE* out_file = fopen("volume_3d.raw", "wb");
-    FILE* out_file = fopen("volume_3d_o.raw", "wb");
-    fwrite(raw_data, sizeof(unsigned char), total_pixels, out_file);
-    fclose(out_file);
+    vector<float> slice(pixels_per_slice);
 
-    delete[] raw_data;
-    
-    cout << "XUAT FILE THANH CONG! Bay gio ban co the dung file volume_3d.raw cho code CUDA" << endl;
+    int valid_slices = 0;
+    int missing_files = 0;
+    int corrupted_files = 0;
+
+    cout << "Bat dau tao volume..." << endl;
+
+    for (int z = 1; z <= D; z++) {
+        string filename = "output/ro/ro_" + to_string(z) + ".txt";
+        // string filename = "output/o/o_" + to_string(z) + ".txt";
+        // string filename = "output/normal/" + to_string(z) + ".txt";
+
+        FILE* in = fopen(filename.c_str(), "r");
+
+        if (!in) {
+            cerr << "[SKIP] Missing: " << filename << endl;
+            missing_files++;
+            continue;
+        }
+
+        bool ok = true;
+
+        for (long long i = 0; i < pixels_per_slice; i++) {
+            if (fscanf(in, "%f", &slice[i]) != 1) {
+                ok = false;
+                break;
+            }
+        }
+
+        fclose(in);
+
+        if (!ok) {
+            cerr << "[SKIP] Corrupted: " << filename << endl;
+            corrupted_files++;
+            continue;
+        }
+
+        fwrite(slice.data(), sizeof(float), pixels_per_slice, out);
+        valid_slices++;
+
+        cout << "\rLoaded " << valid_slices << " slices" << flush;
+    }
+
+    fclose(out);
+
+    cout << "\n\n========== SUMMARY ==========\n";
+
+    cout << "Valid slices     : " << valid_slices << endl;
+    cout << "Missing files    : " << missing_files << endl;
+    cout << "Corrupted files  : " << corrupted_files << endl;
+
+    cout << "Volume size      : " << W << " x " << H << " x " << valid_slices << endl;
+
+    cout << "RAW created: volume_3d_ro.raw" << endl;
+    // cout << "RAW created: volume_3d_o.raw" << endl;
+    // cout << "RAW created: volume_3d_normal.raw" << endl;
+
     return 0;
 }
