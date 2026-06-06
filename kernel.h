@@ -7,12 +7,38 @@
 
 // Đầu vào: d_volume (Khối 3D gốc)
 // Đầu ra: d_mip (Tấm ảnh 2D chứa mạng lưới gân máu)
-__global__ void kernel_MIP_Projection(unsigned char* d_volume, unsigned char* d_mip, int W, int H, int D) {
+
+// ====================================================================
+// BƯỚC 1 MỚI: Ép khối 3D thành ảnh 2D bề mặt (En-face MIP)
+// ====================================================================
+// Đầu vào: Khối 3D
+// Đầu ra: Bản đồ mạch máu kích thước H x D (H x D)
+__global__ void kernel_Enface_MIP(float* d_volume, float* d_enface, int W, int H, int D) {
+    // Tọa độ mặt phẳng nhìn từ trên xuống lúc này là Y-Z (Height và Depth)
+    int y = blockIdx.x * blockDim.x + threadIdx.x; // H
+    int z = blockIdx.y * blockDim.y + threadIdx.y; // D
+
+    if (y < H && z < D) {
+        float max_val = 0;
+        
+        // Tia sáng đâm xuyên theo chiều sâu X (Width = 560)
+        for (int x = 0; x < W; x++) {
+            long long idx = (long long)z * W * H + (long long)y * W + x;
+            if (d_volume[idx] > max_val) {
+                max_val = d_volume[idx];
+            }
+        }
+        // Ghi lên tấm ảnh bề mặt có kích thước H x D
+        d_enface[z * H + y] = max_val;
+    }
+}
+
+__global__ void kernel_MIP_Projection(float* d_volume, float* d_mip, int W, int H, int D) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
 
     if (x < W && y < H) {
-        unsigned char max_val = 0;
+        float max_val = 0;
 
         // Vòng lặp chạy dọc theo chiều sâu Z
         for (int z = 0; z < D; z++) {
@@ -37,17 +63,15 @@ __global__ void kernel_MIP_Projection(unsigned char* d_volume, unsigned char* d_
 // Đầu ra: d_glcm (Mảng 1D mô phỏng ma trận 256x256, khởi tạo toàn số 0)
 // dx, dy: Khoảng cách giữa 2 điểm ảnh muốn so sánh (Thường dùng dx=1, dy=0 để so sánh điểm ảnh liền kề theo chiều ngang)
 
-__global__ void kernel_Compute_GLCM(unsigned char* d_mip, int* d_glcm, int W, int H, int dx, int dy) {
+__global__ void kernel_Compute_GLCM(float* d_mip, int* d_glcm, int W, int H, int dx, int dy) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
 
     // Đảm bảo không quét vượt quá lề của bức ảnh
     if (x < W - dx && y < H - dy) {
         // Lấy giá trị của điểm ảnh hiện tại (pixel 1)
-        int pixel_val1 = d_mip[y * W + x];
-
-        // Lấy giá trị của điểm ảnh hàng xóm (pixel 2)
-        int pixel_val2 = d_mip[(y + dy) * W + (x + dx)];
+        int pixel_val1 = min(max((int)d_mip[y * W + x], 0), 255);
+        int pixel_val2 = min(max((int)d_mip[(y+dy)*W + (x+dx)], 0), 255);
 
         // Tính toán tọa độ của cặp này trong ma trận 256x256
         int glcm_idx = pixel_val1 * 256 + pixel_val2;
@@ -65,13 +89,13 @@ __global__ void kernel_Compute_GLCM(unsigned char* d_mip, int* d_glcm, int W, in
 
 // Đầu vào: d_mip (Ảnh 2D vừa ép xong)
 // Đầu ra: d_blurred (Ảnh 2D đã làm mịn)
-__global__ void kernel_Mean_Blur(unsigned char* d_mip, unsigned char* d_blurred, int W, int H) {
+__global__ void kernel_Mean_Blur(float* d_mip, float* d_blurred, int W, int H) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
 
     // Bỏ qua viền ngoài cùng để tránh lỗi out-of-bounds
     if (x >= 1 && x < W - 1 && y >= 1 && y < H - 1) {
-        int sum = 0;
+        float sum = 0;
 
         // Quét ma trận 3x3
         for (int dy = -1; dy <= 1; dy++) {
@@ -82,7 +106,7 @@ __global__ void kernel_Mean_Blur(unsigned char* d_mip, unsigned char* d_blurred,
         }
 
         // Chia 9 để lấy trung bình
-        d_blurred[y * W + x] = (unsigned char)(sum / 9);
+        d_blurred[y * W + x] = sum / 9.0f;
     }
 }
 
@@ -92,7 +116,7 @@ __global__ void kernel_Mean_Blur(unsigned char* d_mip, unsigned char* d_blurred,
 
 // Đầu vào: d_blurred
 // Đầu ra: d_binary (Ảnh trắng đen)
-__global__ void kernel_Thresholding(unsigned char* d_blurred, unsigned char* d_binary, int W, int H, int threshold_value) {
+__global__ void kernel_Thresholding(float* d_blurred, float* d_binary, int W, int H, float threshold_value) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
 
@@ -113,7 +137,7 @@ __global__ void kernel_Thresholding(unsigned char* d_blurred, unsigned char* d_b
 
 // Đầu vào: d_binary (Ảnh trắng đen)
 // Đầu ra: d_white_count (Một biến duy nhất lưu tổng số pixel trắng)
-__global__ void kernel_Count_Vessels(unsigned char* d_binary, int* d_white_count, int W, int H) {
+__global__ void kernel_Count_Vessels(float* d_binary, int* d_white_count, int W, int H) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
 
