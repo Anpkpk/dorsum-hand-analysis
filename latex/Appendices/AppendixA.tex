@@ -6,13 +6,15 @@
 
 %----------------------------------------------------------------------------------------
 
-Do giới hạn về độ dài của phụ lục, chỉ trích dẫn các đoạn mã Kernel CUDA quan trọng nhất. Toàn bộ mã nguồn đầy đủ được lưu trữ trên GitHub hoặc Google Colab.
+Do giới hạn về độ dài của phụ lục, chỉ trích dẫn các đoạn mã Kernel CUDA quan trọng nhất. Toàn bộ mã nguồn đầy đủ được lưu trữ trên :
+
+GitHub https://github.com/Anpkpk/dorsum-hand-analysis.git
 
 \section{Kernel MIP Projection}
 
 Kernel chiếu cường độ tối đa, nén khối 3D thành bản đồ 2D:
 
-\begin{verbatim}
+\begin{lstlisting}[language=Python, caption={Object Detection Function}, label={lst:detect_function}]
 __global__ void MIP_Projection(
     unsigned char* d_volume, 
     unsigned char* d_mip,
@@ -30,15 +32,14 @@ __global__ void MIP_Projection(
         d_mip[y * W + x] = max_val;
     }
 }
-\end{verbatim}
-
+\end{lstlisting}
 %----------------------------------------------------------------------------------------
 
 \section{Kernel Mean Blur}
 
 Kernel làm mờ trung bình với cửa sổ $3 \times 3$:
 
-\begin{verbatim}
+\begin{lstlisting}[language=Python, label={lst:detect_function}]
 __global__ void Mean_Blur(
     unsigned char* d_input, 
     unsigned char* d_output,
@@ -57,13 +58,13 @@ __global__ void Mean_Blur(
         d_output[y * W + x] = (unsigned char)(sum / 9);
     }
 }
-\end{verbatim}
+\end{lstlisting}
 
 %----------------------------------------------------------------------------------------
 
 \section{Kernel Thresholding và Count Vessels}
 
-\begin{verbatim}
+\begin{lstlisting}[language=Python, label={lst:detect_function}]
 __global__ void Thresholding(
     unsigned char* d_input, 
     unsigned char* d_output,
@@ -92,13 +93,13 @@ __global__ void Count_Vessels(
         }
     }
 }
-\end{verbatim}
+\end{lstlisting}
 
 %----------------------------------------------------------------------------------------
 
 \section{Kernel Compute GLCM}
 
-\begin{verbatim}
+\begin{lstlisting}[language=Python, label={lst:detect_function}]
 __global__ void Compute_GLCM(
     unsigned char* d_mip, 
     int* d_glcm,
@@ -114,4 +115,4 @@ __global__ void Compute_GLCM(
         atomicAdd(&d_glcm[index], 1);
     }
 }
-\end{verbatim}
+\end{lstlisting}

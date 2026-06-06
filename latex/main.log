@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.10.4)  6 JUN 2026 16:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.10.4)  6 JUN 2026 22:01
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1156,7 +1156,17 @@ Package csquotes Info: ... found 'babel' package.
 LaTeX Font Info:    Trying to load font information for T5+ptm on input line 113.
  (c:/texlive/2025/texmf-dist/tex/latex/vntex/t5ptm.fd
 File: t5utm.fd 2005/08/24 Fontinst v1.929 font definitions for T5/ptm.
-) (./main.aux (./main-cover.aux) (./sub-cover.aux) (./Chapters/Chapter0.aux) (./Chapters/Chapter1.aux) (./Chapters/Chapter2.aux) (./Chapters/Chapter3.aux) (./Chapters/Chapter4.aux) (./Appendices/AppendixA.aux))
+) (./main.aux (./main-cover.aux) (./sub-cover.aux) (./Chapters/Chapter0.aux) (./Chapters/Chapter1.aux) (./Chapters/Chapter2.aux) (./Chapters/Chapter3.aux) (./Chapters/Chapter4.aux) (./Appendices/AppendixA.aux
+
+LaTeX Warning: Label `lst:detect_function' multiply defined.
+
+
+LaTeX Warning: Label `lst:detect_function' multiply defined.
+
+
+LaTeX Warning: Label `lst:detect_function' multiply defined.
+
+))
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 113.
@@ -1423,7 +1433,7 @@ Package hyperref Warning: Glyph not defined in PU encoding,
 [5
 
 
-]
+{c:/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc}]
 
 
 Package scrlayer-scrpage Warning: \headheight to low.
@@ -1458,7 +1468,7 @@ LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 17
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 ))
 
-[2{c:/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc}]
+[2]
 \openout2 = `Chapters/Chapter1.aux'.
 
  (./Chapters/Chapter1.tex
@@ -1494,7 +1504,7 @@ Package csquotes Warning: No space factor codes for 'T5' encoding.
 Package csquotes Warning: No space factor codes for 'T5' encoding.
 (csquotes)                Punctuation tracker may fail on input line 19.
 
-<Figures/Chapter/1.png, id=310, 558.58687pt x 436.63126pt>
+<Figures/Chapter/1.png, id=317, 558.58687pt x 436.63126pt>
 File: Figures/Chapter/1.png Graphic file (type png)
 <use Figures/Chapter/1.png>
 Package pdftex.def Info: Figures/Chapter/1.png  used on input line 23.
@@ -1518,7 +1528,7 @@ Package csquotes Warning: No space factor codes for 'T5' encoding.
 
 
 [6 <./Figures/Chapter/1.png>]
-<Figures/Chapter/2.png, id=331, 399.74344pt x 303.38344pt>
+<Figures/Chapter/2.png, id=338, 399.74344pt x 303.38344pt>
 File: Figures/Chapter/2.png Graphic file (type png)
 <use Figures/Chapter/2.png>
 Package pdftex.def Info: Figures/Chapter/2.png  used on input line 58.
@@ -1550,7 +1560,7 @@ Package pdftex.def Info: Figures/Chapter/2.png  used on input line 58.
 
  (./Chapters/Chapter3.tex
 Ch\uhorn \ohorn ng 3.
-<Figures/Chapter/3.png, id=396, 921.4425pt x 365.11406pt>
+<Figures/Chapter/3.png, id=402, 921.4425pt x 365.11406pt>
 File: Figures/Chapter/3.png Graphic file (type png)
 <use Figures/Chapter/3.png>
 Package pdftex.def Info: Figures/Chapter/3.png  used on input line 13.
@@ -1564,7 +1574,7 @@ Package pdftex.def Info: Figures/Chapter/3.png  used on input line 13.
 
 
  <./Figures/Chapter/3.png>]
-<Figures/Chapter/4.png, id=402, 981.6675pt x 392.96812pt>
+<Figures/Chapter/4.png, id=408, 981.6675pt x 392.96812pt>
 File: Figures/Chapter/4.png Graphic file (type png)
 <use Figures/Chapter/4.png>
 Package pdftex.def Info: Figures/Chapter/4.png  used on input line 34.
@@ -1572,12 +1582,12 @@ Package pdftex.def Info: Figures/Chapter/4.png  used on input line 34.
 
 
 [19 <./Figures/Chapter/4.png>]
-<Figures/Chapter/5.png, id=408, 975.645pt x 388.45125pt>
+<Figures/Chapter/5.png, id=414, 975.645pt x 388.45125pt>
 File: Figures/Chapter/5.png Graphic file (type png)
 <use Figures/Chapter/5.png>
 Package pdftex.def Info: Figures/Chapter/5.png  used on input line 48.
 (pdftex.def)             Requested size: 409.71692pt x 163.13062pt.
-<Figures/Chapter/6.png, id=409, 995.21812pt x 398.23781pt>
+<Figures/Chapter/6.png, id=415, 995.21812pt x 398.23781pt>
 File: Figures/Chapter/6.png Graphic file (type png)
 <use Figures/Chapter/6.png>
 Package pdftex.def Info: Figures/Chapter/6.png  used on input line 65.
@@ -1589,7 +1599,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 [20 <./Figures/Chapter/5.png>]
-<Figures/Chapter/7.png, id=415, 990.70125pt x 393.72093pt>
+<Figures/Chapter/7.png, id=421, 990.70125pt x 393.72093pt>
 File: Figures/Chapter/7.png Graphic file (type png)
 <use Figures/Chapter/7.png>
 Package pdftex.def Info: Figures/Chapter/7.png  used on input line 81.
@@ -1612,6 +1622,9 @@ File: t5ucr.fd 2005/08/24 Fontinst v1.929 font definitions for T5/pcr.
  (./Chapters/Chapter4.tex
 Ch\uhorn \ohorn ng 4.
 
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
 
 [25
 
@@ -1622,19 +1635,29 @@ Ch\uhorn \ohorn ng 4.
 ]
 
 [26]
+LaTeX Font Info:    Calculating math sizes for size <10.83347> on input line 105.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.83347> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 105.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8.01682> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 105.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6.50014> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 105.
+
 
 [27]
 
-[28])
+[28]
 
-[29]
+[29])
+
+[30]
 
 Package csquotes Warning: No space factor codes for 'T5' encoding.
 (csquotes)                Punctuation tracker may fail on input line 275.
 
 
 
-[30
+[31
 
 
 
@@ -1644,29 +1667,19 @@ Package csquotes Warning: No space factor codes for 'T5' encoding.
 
  (./Appendices/AppendixA.tex
 Ph\d {u} l\d {u}c A.
-
-Overfull \hbox (43.56606pt too wide) in paragraph at lines 33--33
-[]            \T5/pcr/m/n/13 unsigned char val = d_volume[z * W * H + y * W + x];[] 
- []
-
-
-
-[31
+(c:/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2024/09/23 1.10c listings language file
+)
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 17.
 
 
-
-]
-
-[32]
-Overfull \hbox (20.24406pt too wide) in paragraph at lines 95--95
-[]        \T5/pcr/m/n/13 d_output[idx] = (d_input[idx] > threshold) ? 255 : 0;[] 
- []
+[32
 
 
 
-[33])
+])
 
-[34] (./main.aux (./main-cover.aux) (./sub-cover.aux) (./Chapters/Chapter0.aux) (./Chapters/Chapter1.aux) (./Chapters/Chapter2.aux) (./Chapters/Chapter3.aux) (./Chapters/Chapter4.aux) (./Appendices/AppendixA.aux))
+[33] (./main.aux (./main-cover.aux) (./sub-cover.aux) (./Chapters/Chapter0.aux) (./Chapters/Chapter1.aux) (./Chapters/Chapter2.aux) (./Chapters/Chapter3.aux) (./Chapters/Chapter4.aux) (./Appendices/AppendixA.aux))
  ***********
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-09-02>
@@ -1675,8 +1688,11 @@ L3 programming layer <2025-09-02>
 
 LaTeX Warning: There were undefined references.
 
+
+LaTeX Warning: There were multiply-defined labels.
+
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: E80D8BCA8FE0DF89DD30A5FE213EF318;10056.
+(rerunfilecheck)             Checksum: DA7EA6095BD41D1DEB3D62E4C471C6A3;10058.
 
 Package biblatex Warning: Please (re)run BibTeX on the file(s):
 (biblatex)                main
@@ -1687,18 +1703,18 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 46381 strings out of 467748
- 989952 string characters out of 5431138
- 1693653 words of memory out of 5000000
- 74283 multiletter control sequences out of 15000+600000
- 681140 words of font info for 96 fonts, out of 8000000 for 9000
+ 46961 strings out of 467748
+ 995904 string characters out of 5431138
+ 1996014 words of memory out of 5000000
+ 74767 multiletter control sequences out of 15000+600000
+ 705814 words of font info for 129 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  96i,20n,122p,1915b,2921s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/vntex/urwvn/ucrr8v.pfb><c:/texlive/2025/texmf-dist/fonts/type1/urw/symbol/usyr.pfb><c:/texlive/2025/texmf-dist/fonts/type1/urw/symbol/usyr.pfb><c:/texlive/2025/texmf-dist/fonts/type1/vntex/urwvn/utmb8v.pfb><c:/texlive/2025/texmf-dist/fonts/type1/vntex/urwvn/utmbi8v.pfb><c:/texlive/2025/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/texlive/2025/texmf-dist/fonts/type1/vntex/urwvn/utmr8v.pfb><c:/texlive/2025/texmf-dist/fonts/type1/urw/times/utmri8a.pfb><c:/texlive/2025/texmf-dist/fonts/type1/vntex/urwvn/utmri8v.pfb>
-Output written on main.pdf (42 pages, 1058273 bytes).
+<c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/vntex/urwvn/ucrb8v.pfb><c:/texlive/2025/texmf-dist/fonts/type1/vntex/urwvn/ucrr8v.pfb><c:/texlive/2025/texmf-dist/fonts/type1/urw/symbol/usyr.pfb><c:/texlive/2025/texmf-dist/fonts/type1/urw/symbol/usyr.pfb><c:/texlive/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/texlive/2025/texmf-dist/fonts/type1/vntex/urwvn/utmb8v.pfb><c:/texlive/2025/texmf-dist/fonts/type1/vntex/urwvn/utmbi8v.pfb><c:/texlive/2025/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/texlive/2025/texmf-dist/fonts/type1/vntex/urwvn/utmr8v.pfb><c:/texlive/2025/texmf-dist/fonts/type1/urw/times/utmri8a.pfb><c:/texlive/2025/texmf-dist/fonts/type1/vntex/urwvn/utmri8v.pfb>
+Output written on main.pdf (41 pages, 1088028 bytes).
 PDF statistics:
- 580 PDF objects out of 1000 (max. 8388607)
- 487 compressed objects within 5 object streams
- 123 named destinations out of 1000 (max. 500000)
+ 691 PDF objects out of 1000 (max. 8388607)
+ 594 compressed objects within 6 object streams
+ 207 named destinations out of 1000 (max. 500000)
  394 words of extra memory for PDF output out of 10000 (max. 10000000)
 
