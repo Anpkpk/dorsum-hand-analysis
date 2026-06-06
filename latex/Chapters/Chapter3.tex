@@ -27,73 +27,72 @@ Bên cạnh đó, hệ thống được xây dựng theo cơ chế pipeline cho 
 
 Cấu trúc tổng thể của hệ thống bao gồm nhiều giai đoạn và các nhánh xử lý chuyên biệt, được tổ chức theo luồng dữ liệu thống nhất từ đầu vào đến đầu ra. Mỗi thành phần trong hệ thống đảm nhận một vai trò cụ thể và phối hợp chặt chẽ với các thành phần còn lại nhằm đảm bảo dữ liệu được xử lý chính xác, hiệu quả và ổn định trong suốt quá trình thực thi.
 
-\begin{itemize}
-    \item []\textbf{1. Giai đoạn 1: Tiền xử lý dữ liệu I/O (CPU)}
-    \begin{figure}[h]
-    \centering
-    \includegraphics[width=0.9\linewidth]{Figures/Chapter/4.png}
-    \caption{Tiền xử lý dữ liệu}
-    \label{fix:chapter1_4}
-    \end{figure}
-    \begin{itemize}
-        \item \textbf{TXT Slices:} Đọc dữ liệu đầu vào từ các lát cắt hình ảnh y khoa dưới dạng tệp văn bản (text).
-        \item \textbf{Convert Binary:} Chuyển đổi dữ liệu từ định dạng văn bản sang định dạng nhị phân (Binary) để tối ưu hóa không gian lưu trữ và tăng tốc độ đọc/ghi dữ liệu.
-        \item \textbf{3D Volume:} Ghép nối và tái tạo các lát cắt 2D đã được xử lý thành một khối dữ liệu không gian 3 chiều (3D Volume) hoàn chỉnh.
-    \end{itemize}
+% Đảm bảo bạn đã thêm dòng này vào phần Preamble (trước \begin{document})
+% \usepackage{enumitem}
 
-    \item[] \textbf{2. Giai đoạn 2: Trích xuất bản đồ 2D (GPU)}
-    
-    \begin{figure}[h]
-    \centering
-    \includegraphics[width=0.9\linewidth]{Figures/Chapter/5.png}
-    \caption{Trích xuất bản đồ 2D}
-    \label{fix:chapter1_5}
-    \end{figure}
+\noindent\textbf{1. Giai đoạn 1: Tiền xử lý dữ liệu I/O}
 
-    \begin{itemize}
-        \item \textbf{Upload Volume lên VRAM:} Chuyển khối dữ liệu 3D từ bộ nhớ chính (RAM của CPU) sang bộ nhớ video (VRAM của GPU) nhằm tận dụng năng lực tính toán song song cường độ cao.
-        \item \textbf{MIP Projection:} Áp dụng kỹ thuật chiếu cường độ tối đa (Maximum Intensity Projection - MIP) dọc theo một trục nhìn nhất định để làm phẳng khối 3D.
-        \item \textbf{Bản đồ 2D:} Thu được kết quả đầu ra là một bản đồ 2D (2D Map) thể hiện rõ nét các cấu trúc có cường độ tín hiệu cao (như mạng lưới mạch máu).
-    \end{itemize}
+\begin{figure}[h!]
+\centering
+\includegraphics[width=1\linewidth]{Figures/Chapter/4.png}
+\caption{Tiền xử lý dữ liệu}
+\label{fix:chapter1_4}
+\end{figure}
 
-    \item []\textbf{3. Giai đoạn 3: Xử lý song song đa nhánh (GPU \& CPU)}
-    \begin{itemize}
-        \item \textbf{Nhánh 1: Vessel Analysis}
-        
-        \begin{figure}[h]
-        \centering
-        \includegraphics[width=0.9\linewidth]{Figures/Chapter/6.png}
-        \caption{Phân tích mạch máu}
-        \label{fix:chapter1_6}
-        \end{figure}
+\begin{itemize}[label={}, leftmargin=*, noitemsep, topsep=4pt]
+    \item \textbf{TXT Slices:} Đọc dữ liệu đầu vào từ các lát cắt hình ảnh y khoa dưới dạng tệp văn bản (text).
+    \item \textbf{Convert Binary:} Chuyển đổi dữ liệu từ định dạng văn bản sang định dạng nhị phân (Binary) để tối ưu hóa không gian lưu trữ và tăng tốc độ đọc/ghi dữ liệu.
+    \item \textbf{3D Volume:} Ghép nối và tái tạo các lát cắt 2D đã được xử lý thành một khối dữ liệu không gian 3 chiều (3D Volume) hoàn chỉnh.
+\end{itemize}
+\vspace{0.3cm}
+\noindent\textbf{2. Giai đoạn 2: Trích xuất bản đồ 2D}
 
-        \begin{itemize}
-            \item \textit{Làm mờ:} Áp dụng các bộ lọc không gian để làm mịn ảnh và giảm thiểu nhiễu.
-            \item \textit{Phân ngưỡng:} Sử dụng kỹ thuật phân ngưỡng (Thresholding) để phân tách rõ ràng cấu trúc mạch máu ra khỏi vùng nền.
-            \item \textit{Đếm điểm ảnh:} Đếm tổng số lượng điểm ảnh (pixels) thuộc về lớp mạch máu đã được phân tách.
-            \item \textit{Mật độ mạch máu:} Tính toán và xuất ra tham số định lượng về mật độ mạch máu trên toàn bộ vùng khảo sát.
-        \end{itemize}
-        
-        \item \textbf{Nhánh 2: Texture Analysis}
-        
-        \begin{figure}[h]
-        \centering
-        \includegraphics[width=0.9\linewidth]{Figures/Chapter/7.png}
-        \caption{Phân tích kết cấu}
-        \label{fix:chapter1_7}
-        \end{figure}
-                
-        \begin{itemize}
-            \item \textit{Khởi tạo GLCM:} Xây dựng ma trận đồng mức xám (Gray-Level Co-occurrence Matrix - GLCM) từ bản đồ 2D để đánh giá mối quan hệ không gian giữa các mức xám.
-            \item \textit{Trích xuất đặc trưng:} Dựa trên GLCM, hệ thống tiến hành tính toán và trích xuất 4 đặc trưng thống kê kết cấu cốt lõi, bao gồm:
-            \begin{enumerate}
-                \item \textbf{Contrast:} Độ tương phản.
-                \item \textbf{Energy:} Năng lượng.
-                \item \textbf{Homogeneity:} Độ đồng nhất.
-                \item \textbf{Correlation:} Độ tương quan.
-            \end{enumerate}
-        \end{itemize}
-    \end{itemize}
+\begin{figure}[h!]
+\centering
+\includegraphics[width=1\linewidth]{Figures/Chapter/5.png}
+\caption{Trích xuất bản đồ 2D}
+\label{fix:chapter1_5}
+\end{figure}
+
+\begin{itemize}[label={}, leftmargin=*, noitemsep, topsep=4pt]
+    \item \textbf{Upload Volume lên VRAM:} Chuyển khối dữ liệu 3D từ bộ nhớ chính (RAM của CPU) sang bộ nhớ video (VRAM của GPU) nhằm tận dụng năng lực tính toán song song cường độ cao.
+    \item \textbf{MIP Projection:} Áp dụng kỹ thuật chiếu cường độ tối đa (Maximum Intensity Projection - MIP) dọc theo một trục nhìn nhất định để làm phẳng khối 3D.
+    \item \textbf{Bản đồ 2D:} Thu được kết quả đầu ra là một bản đồ 2D (2D Map) thể hiện rõ nét các cấu trúc có cường độ tín hiệu cao (như mạng lưới mạch máu).
+\end{itemize}
+
+\vspace{0.3cm}
+\noindent\textbf{3. Giai đoạn 3: Xử lý song song đa nhánh}
+
+\vspace{0.2cm}
+\noindent\textbf{Nhánh 1: Vessel Analysis}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=1\linewidth]{Figures/Chapter/6.png}
+\caption{Phân tích mạch máu}
+\label{fix:chapter1_6}
+\end{figure}
+
+\begin{itemize}[label=$\ast$, leftmargin=*, noitemsep, topsep=4pt]
+    \item \textit{Làm mờ:} Áp dụng các bộ lọc không gian để làm mịn ảnh và giảm thiểu nhiễu.
+    \item \textit{Phân ngưỡng:} Sử dụng kỹ thuật phân ngưỡng (Thresholding) để phân tách rõ ràng cấu trúc mạch máu ra khỏi vùng nền.
+    \item \textit{Đếm điểm ảnh:} Đếm tổng số lượng điểm ảnh (pixels) thuộc về lớp mạch máu đã được phân tách.
+    \item \textit{Mật độ mạch máu:} Tính toán và xuất ra tham số định lượng về mật độ mạch máu trên toàn bộ vùng khảo sát.
+\end{itemize}
+
+\vspace{0.2cm}
+\noindent\textbf{Nhánh 2: Texture Analysis}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=1\linewidth]{Figures/Chapter/7.png}
+\caption{Phân tích kết cấu}
+\label{fix:chapter1_7}
+\end{figure}
+
+\begin{itemize}[label=$\ast$, leftmargin=*, noitemsep, topsep=4pt]
+    \item \textit{Khởi tạo GLCM:} Xây dựng ma trận đồng mức xám (Gray-Level Co-occurrence Matrix - GLCM) từ bản đồ 2D để đánh giá mối quan hệ không gian giữa các mức xám.
+    \item \textit{Trích xuất đặc trưng:} Dựa trên GLCM, hệ thống tiến hành tính toán và trích xuất 4 đặc trưng thống kê kết cấu cốt lõi bao gồm: \textbf{Contrast} (Độ tương phản), \textbf{Energy} (Năng lượng), \textbf{Homogeneity} (Độ đồng nhất) và \textbf{Correlation} (Độ tương quan).
 \end{itemize}
 
 
@@ -101,7 +100,7 @@ Cấu trúc tổng thể của hệ thống bao gồm nhiều giai đoạn và c
 
 %----------------------------------------------------------------------------------------
 
-\section{Tối ưu hóa I/O Dữ liệu (Data I/O Optimization)}
+\section{Tối ưu hóa I/O Dữ liệu}
 
 Một trong những nút thắt cổ chai lớn nhất của hệ thống ban đầu là quá trình nạp dữ liệu. Dữ liệu gốc được lưu dưới dạng hàng trăm tệp văn bản tĩnh (\code{.txt}), chứa các giá trị mức xám dưới dạng chuỗi ký tự ASCII. Việc yêu cầu CPU mở từng tệp, đọc chuỗi, giải mã thành số thực (float) và chuẩn hóa màu sắc mất rất nhiều thời gian.
 
@@ -122,21 +121,21 @@ Nhờ định dạng Binary \code{.raw}, máy tính có thể nạp hàng tỷ b
 
 
 
-\subsection{Kernel Chiếu ảnh cường độ tối đa (MIP\_Projection)}
+\subsection{Kernel Chiếu ảnh cường độ tối đa}
 
 Thuật toán MIP duyệt qua toàn bộ chiều sâu $D$ của khối ảnh. Trong không gian 3D, mỗi luồng (thread) được gắn tọa độ $(x, y)$ tương ứng với một điểm ảnh trên mặt phẳng đích. GPU phân công mỗi luồng chỉ chạy 1 vòng lặp dọc theo trục $Z$. Luồng sẽ duyệt qua các giá trị tại tọa độ $(x, y, z)$ tương ứng, so sánh và lưu trữ giá trị cực đại tìm được vào biến \code{max\_val}, sau đó ghi thẳng vào mảng \code{d\_mip} 2D.
 
 \subsection{Các Kernel thuộc nhánh Vessel Analysis}
 
 \begin{itemize}
-    \item \textbf{Kernel Làm mờ (Mean\_Blur):} Mỗi luồng tại tọa độ $(x, y)$ kiểm tra các điều kiện biên để tránh lỗi truy xuất vùng nhớ (Segmentation fault). Nếu an toàn, luồng sẽ tính tổng cường độ của điểm ảnh đó và 8 điểm lân cận, sau đó chia cho 9 để ra giá trị trung bình và ghi vào ảnh \code{d\_blurred}.
+    \item \textbf{Kernel Làm mờ :} Mỗi luồng tại tọa độ $(x, y)$ kiểm tra các điều kiện biên để tránh lỗi truy xuất vùng nhớ (Segmentation fault). Nếu an toàn, luồng sẽ tính tổng cường độ của điểm ảnh đó và 8 điểm lân cận, sau đó chia cho 9 để ra giá trị trung bình và ghi vào ảnh \code{d\_blurred}.
     
-    \item \textbf{Kernel Phân ngưỡng (Thresholding):} Các luồng hoạt động hoàn toàn độc lập, thực hiện phép toán rẽ nhánh: Nếu giá trị tại $(x,y)$ vượt qua ngưỡng được cài đặt (ví dụ: 140), gán bằng 255; ngược lại gán bằng 0.
+    \item \textbf{Kernel Phân ngưỡng :} Các luồng hoạt động hoàn toàn độc lập, thực hiện phép toán rẽ nhánh: Nếu giá trị tại $(x,y)$ vượt qua ngưỡng được cài đặt (ví dụ: 140), gán bằng 255; ngược lại gán bằng 0.
     
-    \item \textbf{Kernel Đếm mạch máu (Count\_Vessels):} Để tránh việc hàng ngàn luồng ghi đè lên nhau khi cộng dồn tổng số điểm ảnh trắng, lệnh khóa bộ nhớ \code{atomicAdd()} được sử dụng. Mỗi luồng phát hiện điểm mạch máu sẽ an toàn cộng thêm 1 vào biến con trỏ \code{d\_white\_count} lưu trên VRAM.
+    \item \textbf{Kernel Đếm mạch máu :} Để tránh việc hàng ngàn luồng ghi đè lên nhau khi cộng dồn tổng số điểm ảnh trắng, lệnh khóa bộ nhớ \code{atomicAdd()} được sử dụng. Mỗi luồng phát hiện điểm mạch máu sẽ an toàn cộng thêm 1 vào biến con trỏ \code{d\_white\_count} lưu trên VRAM.
 \end{itemize}
 
-\subsection{Kernel thuộc nhánh Texture Analysis (GLCM)}
+\subsection{Kernel thuộc nhánh Texture Analysis}
 
 Khác với nhánh trên, tính toán kết cấu yêu cầu đếm tần suất xuất hiện của các cặp điểm ảnh lân cận. Tại hàm \code{Compute\_GLCM}, mỗi luồng xử lý một cặp điểm ảnh (\code{pixel\_1}, \code{pixel\_2}) theo độ dời ngang ($dx = 1, dy = 0$).
 

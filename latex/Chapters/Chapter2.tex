@@ -42,9 +42,9 @@ Mô hình lập trình CUDA phân chia hệ thống thành hai phần chính:
 
 %----------------------------------------------------------------------------------------
 
-\section{Cơ sở thuật toán nhánh phân tích mạch máu (Vessel Analysis)}
+\section{Cơ sở thuật toán nhánh phân tích mạch máu}
 
-\subsection{Thuật toán chiếu ảnh cường độ tối đa (MIP)}
+\subsection{Thuật toán chiếu ảnh cường độ tối đa}
 
 MIP (Maximum Intensity Projection) là phương pháp nén khối dữ liệu 3D thành bản đồ 2D~\cite{defined_mip}. Thuật toán mô phỏng việc chiếu các tia sáng dọc theo trục $Z$ của khối. Trên mỗi đường truyền của tia từ mặt trên xuống mặt đáy, thuật toán sẽ lấy giá trị voxel có cường độ sáng lớn nhất để chiếu lên mặt phẳng 2D:
 \begin{equation}
@@ -62,7 +62,7 @@ trong đó $V(x, y, z)$ là giá trị voxel tại tọa độ $(x, y, z)$ và $
 
 Do mạch máu thường có mức độ phản xạ quang học sáng hơn so với mô nền, thuật toán MIP giúp trích xuất toàn bộ mạng lưới mạch máu ẩn bên trong lớp da lên một bức ảnh bề mặt duy nhất.
 
-\subsection{Bộ lọc trung bình (Mean Filter)}
+\subsection{Bộ lọc trung bình}
 
 Trong quá trình thu nhận tín hiệu từ các thiết bị chụp cắt lớp (như CT, MRI hay OCT), hình ảnh thường bị suy giảm chất lượng do sự xuất hiện của các loại nhiễu ngẫu nhiên, đặc biệt là nhiễu hạt (\textit{speckle noise}) và nhiễu Gaussian. Để loại bỏ các thành phần nhiễu này và cải thiện tỷ số tín hiệu trên nhiễu (SNR), một bộ lọc không gian tuyến tính — cụ thể là bộ lọc trung bình (\textit{Mean Blur}) với kích thước cửa sổ (kernel) $3 \times 3$ — được áp dụng lên từng điểm ảnh.
 
@@ -82,11 +82,11 @@ Trong đó:
 
 Về mặt hiệu quả xử lý, kỹ thuật lọc không gian này đóng vai trò quan trọng trong việc làm mịn vùng nền mô xung quanh, giảm thiểu các biến động tần số cao do nhiễu gây ra. Đồng thời, quá trình làm mịn cấu trúc này còn hỗ trợ kết nối các phân đoạn mạch máu bị đứt gãy cục bộ do suy hao tín hiệu, tạo điều kiện thuận lợi cho các bước phân đoạn ảnh (\textit{segmentation}) và trích xuất hình thái mạch máu tiếp theo.
 
-\subsection{Thuật toán phân ngưỡng nhị phân (Thresholding)}
+\subsection{Thuật toán phân ngưỡng nhị phân}
 
 Sau giai đoạn làm mịn và giảm nhiễu, thuật toán phân ngưỡng nhị phân (\textit{Binary Thresholding}) được áp dụng như một bước tiền xử lý quyết định nhằm tách biệt đối tượng quan tâm (mạch máu, tổn thương) ra khỏi vùng nền cấu trúc mô. Bản chất của kỹ thuật này là chuyển đổi một ảnh xám (\textit{grayscale image}) có dải giá trị liên tục thành một ảnh nhị phân (\textit{binary image}) chỉ bao gồm hai màu đen và trắng thuần túy.
 
-Quá trình chuyển đổi được thực hiện bằng cách so sánh cường độ sáng của từng điểm ảnh $I(x, y)$ tại vị trí tọa độ $(x, y)$ với một giá trị ngưỡng cường độ cố định $T$ (chọn trước dựa trên thực nghiệm hoặc giải thuật tối ưu, ví dụ: $T = 140$). Hàm toán học phân ngưỡng được định nghĩa như sau:
+Quá trình chuyển đổi được thực hiện bằng cách so sánh cường độ sáng của từng điểm ảnh $I(x, y)$ tại vị trí tọa độ $(x, y)$ với một giá trị ngưỡng cường độ cố định $T$ (chọn trước dựa trên thực nghiệm hoặc giải thuật tối ưu, ví dụ: $T = 42$). Hàm toán học phân ngưỡng được định nghĩa như sau:
 
 \begin{equation}
 I_{\text{binary}}(x, y) = 
@@ -107,7 +107,7 @@ Trong đó:
 Kết quả của quá trình phân ngưỡng nhị phân này tạo ra một bản đồ mặt nạ (\textit{binary mask}) rõ ràng và cô đọng. Đây là cơ sở dữ liệu đầu vào cốt lõi và bắt buộc để hệ thống tiến hành tính toán chỉ số Mật độ mạch máu (\textit{Vessel Density - VD}) — một thông số lâm sàng quan trọng bậc nhất trong việc đánh giá tình trạng tưới máu mô và chẩn đoán các bệnh lý vi mạch.
 
 
-\subsection{Tính toán Mật độ mạch máu (Vessel Density)}
+\subsection{Tính toán Mật độ mạch máu}
 
 Sau khi hoàn thành quá trình phân ngưỡng nhị phân, toàn bộ cấu trúc hình thái của mạng lưới mạch máu đã được bóc tách hoàn toàn khỏi nền mô dưới dạng các điểm ảnh màu trắng (giá trị $255$). Lúc này, chỉ số Mật độ mạch máu (\textit{Vessel Density - VD}) được tiến hành tính toán. Đây là một đại lượng thông số định lượng quan trọng, phản ánh tỷ lệ diện tích được tưới máu trên một đơn vị diện tích khảo sát.
 
@@ -130,9 +130,9 @@ Chỉ số \textit{Vessel Density} thu được là một tham số khách quan 
 
 %----------------------------------------------------------------------------------------
 
-\section{Phân tích kết cấu mô bằng ma trận GLCM (Texture Analysis)}
+\section{Phân tích kết cấu mô bằng ma trận GLCM}
 
-Để phân tích sâu hơn các đặc tính vi mô của mô tổn thương — những đặc điểm thường phân bố phức tạp và khó nhận diện bằng mắt thường — phương pháp phân tích kết cấu dựa trên Ma trận đồng xuất hiện mức xám (\textit{Gray-Level Co-Occurrence Matrix - GLCM}) được áp dụng. Đây là một kỹ thuật thống kê không gian bậc hai (\textit{second-order spatial statistics}), cho phép định lượng mối quan hệ cấu trúc giữa các cặp điểm ảnh dựa trên vị trí tương đối của chúng trong không gian hai chiều.
+Để phân tích sâu hơn các đặc tính vi mô của mô tổn thương, những đặc điểm thường phân bố phức tạp và khó nhận diện bằng mắt thường, phương pháp phân tích kết cấu dựa trên Ma trận đồng xuất hiện mức xám (\textit{Gray-Level Co-Occurrence Matrix - GLCM}) được áp dụng. Đây là một kỹ thuật thống kê không gian bậc hai (\textit{second-order spatial statistics}), cho phép định lượng mối quan hệ cấu trúc giữa các cặp điểm ảnh dựa trên vị trí tương đối của chúng trong không gian hai chiều.
 
 Giả sử vùng ảnh khảo sát có dải giá trị cường độ sáng gồm $L$ mức xám (đối với ảnh số chuẩn 8-bit, mức xám chạy từ $0$ đến $255$, tương ứng với $L = 256$). Khi đó, ma trận GLCM thu được sẽ là một ma trận vuông kích thước $L \times L$ (ví dụ: $256 \times 256$). Một phần tử tại vị trí hàng $i$, cột $j$ (ký hiệu là $C(i, j)$) lưu trữ tần suất xuất hiện của một cặp điểm ảnh: trong đó điểm ảnh thứ nhất có mức xám $i$ và điểm ảnh thứ hai có mức xám $j$, thỏa mãn một mối quan hệ không gian được xác định bởi khoảng cách dịch chuyển $d$ (tính theo pixel) và hướng góc $\theta$ (các hướng thông dụng là $\theta \in \{0^\circ, 45^\circ, 90^\circ, 135^\circ\}$).
 
@@ -239,7 +239,7 @@ P
 
 Từ ma trận xác suất đồng xuất hiện $P(i, j)$, các đặc trưng kết cấu mang thông tin kiểu hình lâm sàng quan trọng được trích xuất cụ thể như sau:
 
-\subsection{Độ tương phản (Contrast)}
+\subsection{Độ tương phản}
 Đại lượng này đo lường mức độ biến thiên và sự khác biệt về cường độ sáng cục bộ giữa các cặp điểm ảnh lân cận trong toàn bộ vùng ảnh khảo sát. Công thức tính toán được xác định bởi:
 
 \begin{equation}
@@ -249,7 +249,7 @@ Từ ma trận xác suất đồng xuất hiện $P(i, j)$, các đặc trưng k
 
 Về mặt ý nghĩa, nếu một vùng mô có độ tương phản cao, điều đó chứng tỏ có sự chênh lệch lớn về mức xám giữa các điểm ảnh đứng cạnh nhau, biểu thị một kết cấu bề mặt thô ráp, có nếp gấp sâu hoặc chứa các cấu trúc thay đổi đột ngột (ví dụ như ranh giới giữa mô lành và khối u). Ngược lại, giá trị này thấp đối với các vùng mô có kết cấu mịn và đồng đều.
 
-\subsection{Độ đồng nhất (Homogeneity)}
+\subsection{Độ đồng nhất}
 Độ đồng nhất (\textit{Homogeneity}), hay còn gọi là Mô-men chênh lệch ngược (\textit{Inverse Difference Moment - IDM}), dùng để đo lường sự chặt chẽ và mức độ tập trung trong phân bố của các phần tử trên ma trận GLCM so với đường chéo chính. Công thức toán học được biểu diễn như sau:
 
 \begin{equation}
@@ -259,7 +259,7 @@ Về mặt ý nghĩa, nếu một vùng mô có độ tương phản cao, điề
 
 Hàm trọng số $\frac{1}{1 + |i - j|}$ sẽ đạt giá trị lớn nhất khi khoảng cách $|i - j|$ tiến về $0$ (tức là các phần tử nằm sát hoặc nằm ngay trên đường chéo chính, ứng với các cặp điểm ảnh có mức xám bằng hoặc gần bằng nhau). Chỉ số này tỉ lệ thuận với tính đồng nhất của bề mặt mô; giá trị Homogeneity càng cao chứng tỏ vùng mô khảo sát có sự chuyển đổi mức xám rất mượt mà, tĩnh lặng và ít có sự đột biến cấu trúc.
 
-\subsection{Năng lượng (Energy)}
+\subsection{Năng lượng}
 Năng lượng (\textit{Energy}), hay còn được gọi là Mô-men góc thứ hai (\textit{Angular Second Moment - ASM}), là đại lượng dùng để đo lường sự lặp lại của các cặp mức xám, phản ánh độ đồng đều tổng thể (\textit{Uniformity}) của kết cấu hình thái ảnh. Công thức xác định là:
 
 \begin{equation}
