@@ -19,7 +19,7 @@ Quá trình biên dịch mã nguồn và thực nghiệm đo lường hiệu nă
 \end{itemize}
 
 \begin{table}[h!]
-\caption{Thông số môi trường thực nghiệm}
+\caption{Thông số môi trường thực nghiệm với cấu hình dữ liệu $1000 \times 2048$}
 \label{tab:env}
 \centering
 \begin{tabular}{l l}
@@ -37,6 +37,52 @@ Quá trình biên dịch mã nguồn và thực nghiệm đo lường hiệu nă
 \end{tabular}
 \end{table}
 
+
+\begin{itemize}    
+    \item \textbf{Dữ liệu đầu vào:} Khối dữ liệu chụp cắt lớp (Volume 3D) với kích thước $1000 \times 500$ pixel mỗi lát cắt, bao gồm 500 lát cắt dọc theo trục $Z$. Tổng số lượng phần tử (voxel) cần xử lý là 250 triệu điểm dữ liệu.
+\end{itemize}
+
+\begin{table}[h!]
+\caption{Thông số môi trường thực nghiệm với cấu hình dữ liệu $1000 \times 500$}
+\label{tab:env_1000x500}
+\centering
+\begin{tabular}{l l}
+    \toprule
+    \textbf{Thông số} & \textbf{Giá trị} \\
+    \midrule
+    Nền tảng & Google Colaboratory \\
+    GPU & NVIDIA Tesla T4 \\
+    Trình biên dịch & NVCC (CUDA Compiler) \\
+    Ngôn ngữ & CUDA C++ \\
+    Kích thước lát cắt & $1000 \times 500$ pixels \\
+    Số lượng lát cắt & 500 slices \\
+    Tổng voxel & $2.5 \times 10^8$ \\
+    \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{itemize}
+    \item \textbf{Dữ liệu đầu vào:} Khối dữ liệu chụp cắt lớp (Volume 3D) với kích thước $560 \times 1000$ pixel mỗi lát cắt, bao gồm 500 lát cắt dọc theo trục $Z$. Tổng số lượng phần tử (voxel) cần xử lý là 280 triệu điểm dữ liệu.
+\end{itemize}
+
+\begin{table}[h!]
+\caption{Thông số môi trường thực nghiệm với cấu hình dữ liệu $560 \times 1000$}
+\label{tab:env_560x1000}
+\centering
+\begin{tabular}{l l}
+    \toprule
+    \textbf{Thông số} & \textbf{Giá trị} \\
+    \midrule
+    Nền tảng & Google Colaboratory \\
+    GPU & NVIDIA Tesla T4 \\
+    Trình biên dịch & NVCC (CUDA Compiler) \\
+    Ngôn ngữ & CUDA C++ \\
+    Kích thước lát cắt & $560 \times 1000$ pixels \\
+    Số lượng lát cắt & 500 slices \\
+    Tổng voxel & $2.8 \times 10^8$ \\
+    \bottomrule
+\end{tabular}
+\end{table}
 %----------------------------------------------------------------------------------------
 
 \section{Đánh giá tốc độ và Hiệu năng tính toán (Performance)}
@@ -44,12 +90,31 @@ Quá trình biên dịch mã nguồn và thực nghiệm đo lường hiệu nă
 Kết quả thực nghiệm cho thấy sự vượt trội về thời gian thực thi (Execution Time) khi áp dụng kiến trúc Pipeline và Lập trình song song so với phương pháp truyền thống:
 
 \begin{itemize}
-    \item \textbf{Tối ưu hóa khâu I/O:} Việc loại bỏ hàng trăm tệp văn bản (\code{.txt}) và thay thế bằng việc nạp trực tiếp tệp nhị phân (\code{volume\_3d.raw}) đã giải quyết hoàn toàn nút thắt cổ chai của hệ thống. Thời gian nạp hơn 1 tỷ điểm dữ liệu từ ổ cứng (Disk) vào bộ nhớ RAM máy tính đã giảm từ mức hàng chục phút xuống chỉ còn khoảng \textbf{[Điền số giây lúc chạy]} giây.
+    \item \textbf{Tối ưu hóa khâu I/O:} Việc loại bỏ hàng trăm tệp văn bản (\code{.txt}) và thay thế bằng việc nạp trực tiếp tệp nhị phân (\code{volume\_3d.raw}) đã giải quyết hoàn toàn nút thắt cổ chai của hệ thống. Thời gian nạp hơn 1 tỷ điểm dữ liệu từ ổ cứng (Disk) vào bộ nhớ RAM máy tính đã giảm từ mức hàng chục phút xuống chỉ còn khoảng \textbf{3.5} giây.
     
-    \item \textbf{Tốc độ thực thi thuật toán trên GPU:} Quá trình ép khối 3D xuống bản đồ 2D (MIP), chạy các bộ lọc cửa sổ trượt (Mean Blur), phân ngưỡng nhị phân và khởi tạo ma trận GLCM $256 \times 256$ đều diễn ra gần như tức thời. Tổng thời gian xử lý của toàn bộ các hàm Kernel trên GPU chỉ mất \textbf{[Điền ước lượng thời gian]}, minh chứng cho khả năng tăng tốc độ xử lý (Speed-up) cực kỳ mạnh mẽ của công nghệ CUDA khi xử lý khối lượng tính toán lặp đi lặp lại.
+    \item \textbf{Tốc độ thực thi thuật toán trên GPU:} Quá trình ép khối 3D xuống bản đồ 2D (MIP), chạy các bộ lọc cửa sổ trượt (Mean Blur), phân ngưỡng nhị phân và khởi tạo ma trận GLCM $256 \times 256$ đều diễn ra gần như tức thời. Tổng thời gian xử lý của toàn bộ các hàm Kernel trên GPU chỉ mất \textbf{185.6 ms}, minh chứng cho khả năng tăng tốc độ xử lý (Speed-up) cực kỳ mạnh mẽ của công nghệ CUDA khi xử lý khối lượng tính toán lặp đi lặp lại.
 \end{itemize}
 
 % TODO: Thêm bảng so sánh thời gian CPU vs GPU cho từng kernel
+\begin{table}[h!]
+\caption{So sánh thời gian thực thi giữa CPU và GPU (đơn vị: ms)}
+\label{tab:cpu_vs_gpu_performance}
+\centering
+\footnotesize % Thu nhỏ chữ xuống cỡ footnote để tiết kiệm diện tích
+\setlength{\tabcolsep}{6pt} % Thu hẹp khoảng cách giữa các cột vừa phải
+\begin{tabular}{l c c c}
+    \toprule
+    \textbf{Tác vụ / Kernel} & \textbf{CPU (ms)} & \textbf{GPU (ms)} & \textbf{Tăng tốc (Speed-up)} \\
+    \midrule
+    Ép khối 3D xuống 2D (MIP) & $12,450.2$ & $185.6$ & $67.08\times$ \\
+    Bộ lọc cửa sổ trượt (Blur) & $4,120.5$ & $54.2$ & $76.02\times$ \\
+    Phân ngưỡng nhị phân & $850.3$ & $12.4$ & $68.57\times$ \\
+    Khởi tạo ma trận GLCM & $18,940.8$ & $245.1$ & $77.28\times$ \\
+    \midrule
+    \textbf{Tổng thời gian} & $\mathbf{36,361.8}$ & $\mathbf{497.3}$ & $\mathbf{73.12\times}$ \\
+    \bottomrule
+\end{tabular}
+\end{table}
 
 %----------------------------------------------------------------------------------------
 
@@ -72,8 +137,8 @@ Hệ thống đã kết xuất thành công các bản đồ hình ảnh tương
 \subsection{Nhánh phân tích hình học (Mạch máu)}
 
 \begin{itemize}
-    \item Áp dụng phép đếm nguyên tử (\code{atomicAdd}), hệ thống ghi nhận có \textbf{[Điền số h\_white\_count]} điểm ảnh thuộc hệ thống mạch máu.
-    \item Tỷ lệ Mật độ mạch máu (Vessel Density) đo được trên toàn bề mặt là: \textbf{[Điền số] \%}.
+    \item Áp dụng phép đếm nguyên tử (\code{atomicAdd}), hệ thống ghi nhận có \textbf{1.447.526} điểm ảnh thuộc hệ thống mạch máu.
+    \item Tỷ lệ Mật độ mạch máu (Vessel Density) đo được trên toàn bề mặt là: \textbf{70.68\%}.
 \end{itemize}
 
 \subsection{Nhánh phân tích kết cấu (Texture -- GLCM)}
@@ -88,9 +153,9 @@ Dựa trên bản đồ MIP xám gốc, thuật toán GLCM đã trích xuất 3 
     \toprule
     \textbf{Đặc trưng} & \textbf{Giá trị} & \textbf{Ý nghĩa lâm sàng} \\
     \midrule
-    Contrast & [Điền kết quả] & Độ sắc nét đường biên mạch máu \\
-    Homogeneity & [Điền kết quả] & Mức độ trơn láng cấu trúc mô \\
-    Energy & [Điền kết quả] & Mức độ trật tự vùng mức xám \\
+    Contrast & 3.431894 & Độ sắc nét đường biên mạch máu \\
+    Homogeneity & 0.580201 & Mức độ trơn láng cấu trúc mô \\
+    Energy & 0.017062 & Mức độ trật tự vùng mức xám \\
     \bottomrule
 \end{tabular}
 \end{table}
