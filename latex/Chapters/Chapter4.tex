@@ -116,8 +116,8 @@ Hệ thống đã kết xuất thành công các bản đồ hình ảnh tương
 \subsection{Nhánh phân tích hình học }
 
 \begin{itemize}
-    \item Áp dụng phép đếm nguyên tử (\code{atomicAdd}), hệ thống ghi nhận có \textbf{1.447.526} điểm ảnh thuộc hệ thống mạch máu.
-    \item Tỷ lệ Mật độ mạch máu (Vessel Density) đo được trên toàn bề mặt là: \textbf{70.68\%}.
+    \item Áp dụng phép đếm nguyên tử (\code{atomicAdd}), hệ thống ghi nhận có \textbf{649.011} điểm ảnh thuộc hệ thống mạch máu.
+    \item Tỷ lệ Mật độ mạch máu (Vessel Density) đo được trên toàn bề mặt là: \textbf{31.69\%}.
 \end{itemize}
 
 \subsection{Nhánh phân tích kết cấu}
@@ -164,7 +164,7 @@ Những đóng góp chính của đề tài bao gồm:
 Bên cạnh những kết quả đạt được, hệ thống vẫn còn một số điểm cần tối ưu thêm:
 
 \begin{itemize}
-    \item Thuật toán phân ngưỡng hiện tại đang sử dụng một giá trị cố định (Hardcoded Threshold $= 140$). Điều này có thể không chính xác nếu áp dụng lên các bộ dữ liệu ảnh y khoa khác có điều kiện ánh sáng và độ tương phản khác nhau.
+    \item Thuật toán phân ngưỡng hiện tại đang sử dụng một giá trị cố định (Hardcoded Threshold $= 45$). Điều này có thể không chính xác nếu áp dụng lên các bộ dữ liệu ảnh y khoa khác có điều kiện ánh sáng và độ tương phản khác nhau.
     
     \item Các thuật toán dùng cửa sổ trượt (Mean Blur) và quét điểm lân cận (GLCM) mới chỉ thao tác trực tiếp trên bộ nhớ Global Memory của GPU. Chưa tận dụng được bộ nhớ tốc độ siêu cao Shared Memory của cấu trúc Block để tối ưu thêm băng thông truy xuất.
 \end{itemize}

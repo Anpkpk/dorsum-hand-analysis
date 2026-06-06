@@ -86,7 +86,7 @@ Về mặt hiệu quả xử lý, kỹ thuật lọc không gian này đóng vai
 
 Sau giai đoạn làm mịn và giảm nhiễu, thuật toán phân ngưỡng nhị phân (\textit{Binary Thresholding}) được áp dụng như một bước tiền xử lý quyết định nhằm tách biệt đối tượng quan tâm (mạch máu, tổn thương) ra khỏi vùng nền cấu trúc mô. Bản chất của kỹ thuật này là chuyển đổi một ảnh xám (\textit{grayscale image}) có dải giá trị liên tục thành một ảnh nhị phân (\textit{binary image}) chỉ bao gồm hai màu đen và trắng thuần túy.
 
-Quá trình chuyển đổi được thực hiện bằng cách so sánh cường độ sáng của từng điểm ảnh $I(x, y)$ tại vị trí tọa độ $(x, y)$ với một giá trị ngưỡng cường độ cố định $T$ (chọn trước dựa trên thực nghiệm hoặc giải thuật tối ưu, ví dụ: $T = 42$). Hàm toán học phân ngưỡng được định nghĩa như sau:
+Quá trình chuyển đổi được thực hiện bằng cách so sánh cường độ sáng của từng điểm ảnh $I(x, y)$ tại vị trí tọa độ $(x, y)$ với một giá trị ngưỡng cường độ cố định $T$ (chọn trước dựa trên thực nghiệm hoặc giải thuật tối ưu, ví dụ: $T = 45$). Hàm toán học phân ngưỡng được định nghĩa như sau:
 
 \begin{equation}
 I_{\text{binary}}(x, y) = 
