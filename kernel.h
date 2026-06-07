@@ -81,7 +81,33 @@ __global__ void kernel_Compute_GLCM(float* d_mip, int* d_glcm, int W, int H, int
     }
 }
 
+// __global__ void kernel_Compute_GLCM(float* d_mip, int* d_glcm, int W, int H, int dx, int dy) {
+//     int x = blockIdx.x * blockDim.x + threadIdx.x;
+//     int y = blockIdx.y * blockDim.y + threadIdx.y;
 
+//     // 1. Đảm bảo pixel gốc nằm gọn trong giới hạn của bức ảnh
+//     if (x < W && y < H) {
+        
+//         // 2. Tính tọa độ của pixel lân cận theo hướng (dx, dy)
+//         int nx = x + dx;
+//         int ny = y + dy;
+
+//         // 3. Kiểm tra xem pixel lân cận có nằm trong ảnh không 
+//         // (Kiểm tra cả cận dưới >= 0 và cận trên < W, H để bắt các trường hợp dx, dy bị âm)
+//         if (nx >= 0 && nx < W && ny >= 0 && ny < H) {
+            
+//             // Lấy giá trị của điểm ảnh hiện tại (pixel 1) và lân cận (pixel 2)
+//             int pixel_val1 = min(max((int)d_mip[y * W + x], 0), 255);
+//             int pixel_val2 = min(max((int)d_mip[ny * W + nx], 0), 255);
+
+//             // Tính toán tọa độ của cặp này trong ma trận 256x256
+//             int glcm_idx = pixel_val1 * 256 + pixel_val2;
+
+//             // Các Thread tranh nhau cộng 1 vào ô này (Phải dùng atomicAdd để an toàn)
+//             atomicAdd(&d_glcm[glcm_idx], 1);
+//         }
+//     }
+// }
 
 // ====================================================================
 // Bước 2: Làm mờ giảm nhiễu (Mean Filter)
@@ -124,9 +150,9 @@ __global__ void kernel_Thresholding(float* d_blurred, float* d_binary, int W, in
         int idx = y * W + x;
 
         if (d_blurred[idx] > threshold_value) {
-            d_binary[idx] = 255; // Mạch máu -> Màu trắng
+            d_binary[idx] = 255; // Mạch máu -> Màu đen 
         } else {
-            d_binary[idx] = 0;   // Da/Nền -> Màu đen
+            d_binary[idx] = 0;   // Da/Nền -> Màu trắng
         }
     }
 }
@@ -144,8 +170,8 @@ __global__ void kernel_Count_Vessels(float* d_binary, int* d_white_count, int W,
     if (x < W && y < H) {
         int idx = y * W + x;
 
-        // Nếu pixel là màu trắng (mạch máu)
-        if (d_binary[idx] == 255) {
+        // Nếu pixel là màu đen (mạch máu)
+        if (d_binary[idx] == 0) {
             atomicAdd(d_white_count, 1); // Tranh nhau cộng tiền vào quỹ chung
         }
     }
