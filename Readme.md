@@ -170,7 +170,7 @@ output/
 Biên dịch:
 
 ```bash
-g++ -O3 img.cpp -o generate_volume
+g++ -03 img.cpp -o generate_volume
 ```
 
 Chạy:
@@ -197,17 +197,6 @@ Chạy:
 
 ---
 
-## Kết quả đầu ra
-
-### Thông tin hiển thị trên Terminal
-
-```text
-Vessel Density (%)
-Contrast
-Energy
-Homogeneity
-```
-
 ### Các file ảnh kết quả
 
 ```text
@@ -230,34 +219,6 @@ ketqua_3_Binary.raw
 
 ---
 
-## Xem kết quả bằng ImageJ
-
-Mở ImageJ:
-
-```text
-File
- └── Import
-      └── Raw...
-```
-
-Thiết lập:
-
-```text
-Image Type : 8-bit
-Width      : 1000
-Height     : 500
-```
-
-Hoặc:
-
-```text
-Image Type : 32-bit Real
-```
-
-nếu dữ liệu được lưu ở định dạng float.
-
----
-
 ## Cấu hình thông số
 
 Các tham số có thể thay đổi trong:
@@ -269,6 +230,7 @@ main.cu
 
 ### Kích thước volume
 
+Với o và ro:
 ```cpp
 W = 560;
 H = 1000;
@@ -279,9 +241,9 @@ Trong đó:
 
 | Tham số | Ý nghĩa           |
 | ------- | ----------------- |
-| W       | Chiều sâu (Depth) |
-| H       | Chiều ngang       |
-| D       | Chiều dọc         |
+| W       | Chiều rộng        |
+| H       | Chiều cao         |
+| D       | Chiều sâu         |
 
 ### Ngưỡng phân đoạn mạch máu
 
@@ -294,7 +256,7 @@ kernel_Thresholding(...)
 Giá trị mặc định:
 
 ```cpp
-42.0f
+45.0f
 ```
 
 Có thể điều chỉnh để phù hợp với từng bộ dữ liệu.
