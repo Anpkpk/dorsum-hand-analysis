@@ -66,7 +66,7 @@ int main() {
     cudaDeviceSynchronize();
 
     // Bạn có thể chỉnh số 42 ở đây tùy vào độ sáng của ảnh mạch máu mới
-    kernel_Thresholding<<<blocksPerGrid, threadsPerBlock>>>(d_blurred, d_binary, H, D, 42.0f);
+    kernel_Thresholding<<<blocksPerGrid, threadsPerBlock>>>(d_blurred, d_binary, H, D, 45.0f);
     cudaDeviceSynchronize();
 
     cudaMemset(d_white_count, 0, sizeof(int));
@@ -83,7 +83,7 @@ int main() {
     printf("\n--- NHANH 2: PHAN TICH KET CAU MO (GLCM) ---\n");
     cudaMemset(d_glcm, 0, 256 * 256 * sizeof(int));
 
-    kernel_Compute_GLCM<<<blocksPerGrid, threadsPerBlock>>>(d_enface, d_glcm, H, D, 1, 0);
+    kernel_Compute_GLCM<<<blocksPerGrid, threadsPerBlock>>>(d_enface, d_glcm, H, D, 0, 1); 
     cudaDeviceSynchronize();
 
     int h_glcm[256 * 256];
